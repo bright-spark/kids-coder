@@ -60,7 +60,7 @@ export async function generateCode(prompt: string, existingCode?: string): Promi
     }
 
     const completion = await openai.chat.completions.create({
-      model: "gpt-3.5-turbo",
+      model: "o1-mini",
       messages,
       temperature: 0.9,
       max_tokens: 2000,
@@ -76,7 +76,7 @@ export async function generateCode(prompt: string, existingCode?: string): Promi
 export async function improveCode(code: string): Promise<string> {
   try {
     const completion = await openai.chat.completions.create({
-      model: "gpt-3.5-turbo",
+      model: "o1-mini",
       messages: [
         { 
           role: "system", 
@@ -98,7 +98,7 @@ export async function improveCode(code: string): Promise<string> {
 export async function debugCode(code: string): Promise<string> {
   try {
     const completion = await openai.chat.completions.create({
-      model: "gpt-3.5-turbo",
+      model: "o1-mini",
       messages: [
         { 
           role: "system", 
