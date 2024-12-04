@@ -23,19 +23,23 @@ const HTML_TEMPLATE = `<!DOCTYPE html>
 </body>
 </html>`;
 
-const SYSTEM_PROMPT = `You are an AI coding tutor for kids. Generate simple, fun HTML/CSS/JS code examples.
+const SYSTEM_PROMPT = `You are an expert AI coding tutor for kids. Generate entertaining and fully working one file single page web apps in HTML/CSS/JS code.
 Rules:
 - ALWAYS use this exact HTML template structure:
 ${HTML_TEMPLATE}
-- Keep code simple and educational
-- Use only vanilla JavaScript (no external libraries)
-- Include helpful comments explaining key concepts
-- Focus on visual and interactive elements
-- Ensure code is safe and appropriate for children
+- ALWAYS Keep code simple yet interesting and educational
+- ALWAYS Use Tailwind for CSS styling from a popular fast CDN
+- ALWAYS use only vanilla JavaScript 
+- ALWAYS Include helpful comments explaining key concepts
+- ALWAYS focus on good visual and interactive elements
+- ALWAYS ensure code is safe and appropriate for children
+- ALWAYS use images from Unsplash for image sources in code
 - ALWAYS return complete, runnable HTML files with embedded CSS/JS
+- NEVER include external libraries besides for Tailwind
 - NEVER include any explanatory text before or after the code
+- NEVER include opening or closing backtick code / language delimeters at all 
 - ONLY return the HTML code, nothing else
-- When given existing code, maintain its core concepts and theme while making improvements`;
+- REMEMBER when given existing code, maintain its core concepts and theme while making improvements`;
 
 export async function generateCode(prompt: string, existingCode?: string): Promise<string> {
   try {
@@ -60,7 +64,7 @@ export async function generateCode(prompt: string, existingCode?: string): Promi
     }
 
     const completion = await openai.chat.completions.create({
-      model: "gpt-4-turbo-preview",
+      model: "gpt-4o-mini",
       messages,
       temperature: 0.9,
       max_tokens: 2000,
@@ -76,7 +80,7 @@ export async function generateCode(prompt: string, existingCode?: string): Promi
 export async function improveCode(code: string): Promise<string> {
   try {
     const completion = await openai.chat.completions.create({
-      model: "gpt-4-turbo-preview",
+      model: "gpt-4o-mini",
       messages: [
         { 
           role: "system", 
@@ -84,7 +88,7 @@ export async function improveCode(code: string): Promise<string> {
         },
         { role: "user", content: code }
       ],
-      temperature: 0.9,
+      temperature: 1,
       max_tokens: 2000,
     });
 
@@ -98,16 +102,16 @@ export async function improveCode(code: string): Promise<string> {
 export async function debugCode(code: string): Promise<string> {
   try {
     const completion = await openai.chat.completions.create({
-      model: "o1-mini",
+      model: "gpt-4o-mini",
       messages: [
         { 
-          role: "gpt-4-turbo-preview", 
+          role: "system", 
           content: `${SYSTEM_PROMPT}\n\nDebug and optimize the following code while maintaining its core functionality, theme, and educational value. Return ONLY the debugged code, no explanations.` 
         },
         { role: "user", content: code }
       ],
-      temperature: 0.9,
-      max_tokens: 2000,
+      temperature: 0.7,
+      max_tokens: 4096,
     });
 
     return completion.choices[0].message.content || '';
