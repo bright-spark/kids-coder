@@ -5,7 +5,8 @@ run = "pnpm run dev"
 channel = "stable-24_05"
 
 [deployment]
-run = ["sh", "-c", "pnpm run dev"]
+run = ["sh", "-c", "pnpm start"]
+build = ["sh", "-c", "pnpm build"]
 
 [[ports]]
 localPort = 3000
@@ -13,3 +14,14 @@ externalPort = 80
 
 [[ports]]
 localPort = 5173
+
+[workflows]
+runButton = "Dev"
+
+[[workflows.workflow]]
+name = "Dev"
+author = 11027186
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "pnpm dev"
