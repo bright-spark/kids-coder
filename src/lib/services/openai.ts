@@ -38,6 +38,28 @@ ${HTML_TEMPLATE}
 
 // Removed duplicate generateCode function
 
+export async function generateCode(prompt: string, existingCode?: string): Promise<string> {
+  try {
+    const response = await fetch('/api/generate', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ prompt, existingCode }),
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to generate code');
+    }
+
+    const data = await response.json();
+    return data.code;
+  } catch (error) {
+    console.error('API Error:', error);
+    throw new Error('Failed to generate code. Please try again.');
+  }
+}
+
 export async function improveCode(code: string): Promise<string> {
   try {
     const response = await fetch('/api/generate', {
