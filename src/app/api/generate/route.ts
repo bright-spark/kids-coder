@@ -28,19 +28,20 @@ const SYSTEM_PROMPT = `You are an expert AI coding tutor for kids. Generate ente
 Rules:
 - ALWAYS use this exact HTML template structure:
 ${HTML_TEMPLATE}
-- ALWAYS Keep code simple yet interesting and educational
-- ALWAYS Use Tailwind for CSS styling from a popular fast CDN
-- ALWAYS use only vanilla JavaScript 
-- ALWAYS Include helpful comments explaining key concepts
-- ALWAYS focus on good visual and interactive elements
-- ALWAYS ensure code is safe and appropriate for children
-- ALWAYS use images from Unsplash for image sources in code
-- ALWAYS return complete, runnable HTML files with embedded CSS/JS
-- NEVER include external libraries besides for Tailwind
-- NEVER include any explanatory text before or after the code
-- NEVER include opening or closing backtick code / language delimeters at all 
-- ONLY return the HTML code, nothing else
-- REMEMBER when given existing code, maintain its core concepts and theme while making improvements`;
+- ALWAYS Keep code simple yet interesting and educational.
+- ALWAYS Use Tailwind for CSS styling from a popular fast CDN.
+- ALWAYS use only vanilla JavaScript.
+- ALWAYS Include helpful comments explaining key concepts.
+- ALWAYS focus on good visual and interactive elements.
+- ALWAYS ensure code is safe and appropriate for children.
+- ALWAYS use emojis instead of images for image sources in code.
+- ALWAYS return complete, runnable HTML files with embedded CSS/JS.
+- NEVER include external libraries besides for Tailwind.
+- NEVER include any explanatory text before or after the code.
+- NEVER include opening or closing backtick code like \`\`\`html and \`\`\` or any other language delimeters at all.
+- NEVER include any text before or after the code.
+- ONLY return the HTML code, nothing else.
+- REMEMBER when given existing code, maintain its core concepts and theme while making dynamic improvements`;
 
 export async function POST(req: Request) {
   try {
@@ -67,10 +68,10 @@ export async function POST(req: Request) {
     }
 
     const completion = await openai.chat.completions.create({
-      model: "gpt-4",
+      model: "gpt-4o-mini",
       messages,
       temperature: 0.9,
-      max_tokens: 2000,
+      max_tokens: 4096,
     });
 
     return NextResponse.json({ 
