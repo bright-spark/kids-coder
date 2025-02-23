@@ -58,8 +58,11 @@ function Calendar({
         ...classNames,
       }}
       components={{
-        PrevButton: () => <ChevronLeftIcon className="h-4 w-4" />,
-        NextButton: () => <ChevronRightIcon className="h-4 w-4" />
+        NavButton: ({ dir }) => dir === 'prev' ? (
+          <ChevronLeftIcon className="h-4 w-4" />
+        ) : (
+          <ChevronRightIcon className="h-4 w-4" />
+        )
       }}
       {...props}
     />
