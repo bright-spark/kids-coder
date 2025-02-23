@@ -36,27 +36,7 @@ ${HTML_TEMPLATE}
 - ONLY return the HTML code, nothing else
 - REMEMBER when given existing code, maintain its core concepts and theme while making improvements`;
 
-export async function generateCode(prompt: string, existingCode?: string): Promise<string> {
-  try {
-    const response = await fetch('/api/generate', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ prompt, existingCode }),
-    });
-
-    if (!response.ok) {
-      throw new Error('Failed to generate code');
-    }
-
-    const data = await response.json();
-    return data.code;
-  } catch (error) {
-    console.error('API Error:', error);
-    throw new Error('Failed to generate code. Please try again.');
-  }
-}
+// Removed duplicate generateCode function
 
 export async function improveCode(code: string): Promise<string> {
   try {
