@@ -1,24 +1,4 @@
-export async function generateCode(prompt: string, existingCode?: string): Promise<string> {
-  try {
-    const response = await fetch('/api/generate', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ prompt, existingCode }),
-    });
-
-    if (!response.ok) {
-      throw new Error('Failed to generate code');
-    }
-
-    const data = await response.json();
-    return data.code;
-  } catch (error) {
-    console.error('API Error:', error);
-    throw new Error('Failed to generate code. Please try again.');
-  }
-}
+import OpenAI from 'openai';
 
 const HTML_TEMPLATE = `<!DOCTYPE html>
 <html lang="en">
@@ -58,80 +38,72 @@ ${HTML_TEMPLATE}
 
 export async function generateCode(prompt: string, existingCode?: string): Promise<string> {
   try {
-    const messages: OpenAI.Chat.ChatCompletionMessageParam[] = [
-      { role: "system", content: SYSTEM_PROMPT },
-    ];
-
-    if (existingCode) {
-      messages.push({
-        role: "assistant",
-        content: "Here's the current code we're working with:\n\n" + existingCode
-      });
-      messages.push({
-        role: "user",
-        content: `Based on this existing code, ${prompt}`
-      });
-    } else {
-      messages.push({
-        role: "user",
-        content: prompt
-      });
-    }
-
-    const completion = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
-      messages,
-      temperature: 0.9,
-      max_tokens: 2000,
+    const response = await fetch('/api/generate', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ prompt, existingCode }),
     });
 
-    return completion.choices[0].message.content || '';
+    if (!response.ok) {
+      throw new Error('Failed to generate code');
+    }
+
+    const data = await response.json();
+    return data.code;
   } catch (error) {
-    console.error('OpenAI API Error:', error);
+    console.error('API Error:', error);
     throw new Error('Failed to generate code. Please try again.');
   }
 }
 
 export async function improveCode(code: string): Promise<string> {
   try {
-    const completion = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
-      messages: [
-        { 
-          role: "system", 
-          content: `${SYSTEM_PROMPT}\n\nImprove the following code while maintaining its core functionality, theme, and educational value. Return ONLY the improved code, no explanations.` 
-        },
-        { role: "user", content: code }
-      ],
-      temperature: 1,
-      max_tokens: 2000,
+    const response = await fetch('/api/generate', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        prompt: 'Improve this code while maintaining its core functionality',
+        existingCode: code
+      }),
     });
 
-    return completion.choices[0].message.content || '';
+    if (!response.ok) {
+      throw new Error('Failed to improve code');
+    }
+
+    const data = await response.json();
+    return data.code;
   } catch (error) {
-    console.error('OpenAI API Error:', error);
+    console.error('API Error:', error);
     throw new Error('Failed to improve code. Please try again.');
   }
 }
 
 export async function debugCode(code: string): Promise<string> {
   try {
-    const completion = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
-      messages: [
-        { 
-          role: "system", 
-          content: `${SYSTEM_PROMPT}\n\nDebug and optimize the following code while maintaining its core functionality, theme, and educational value. Return ONLY the debugged code, no explanations.` 
-        },
-        { role: "user", content: code }
-      ],
-      temperature: 0.7,
-      max_tokens: 4096,
+    const response = await fetch('/api/generate', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        prompt: 'Debug and optimize this code while maintaining its core functionality',
+        existingCode: code
+      }),
     });
 
-    return completion.choices[0].message.content || '';
+    if (!response.ok) {
+      throw new Error('Failed to debug code');
+    }
+
+    const data = await response.json();
+    return data.code;
   } catch (error) {
-    console.error('OpenAI API Error:', error);
+    console.error('API Error:', error);
     throw new Error('Failed to debug code. Please try again.');
   }
 }
