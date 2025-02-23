@@ -72,7 +72,7 @@ export function CodeEditor() {
         </div>
       )}
       <div className="p-2 border-b border-red-900/20">
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-2 w-full"> {/* Modified line */}
           <Button 
             variant="ghost" 
             size="sm" 
