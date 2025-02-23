@@ -1,4 +1,4 @@
-import * as React from 'react';
+
 import { ChevronLeftIcon, ChevronRightIcon } from '@radix-ui/react-icons';
 import { DayPicker, DayPickerProps } from 'react-day-picker';
 
@@ -60,8 +60,8 @@ function Calendar({
         ...classNames,
       }}
       components={{
-        CaptionNavPrevIcon: () => <ChevronLeftIcon className="h-4 w-4" />,
-        CaptionNavNextIcon: () => <ChevronRightIcon className="h-4 w-4" />,
+        IconLeft: () => <ChevronLeftIcon className="h-4 w-4" />,
+        IconRight: () => <ChevronRightIcon className="h-4 w-4" />,
       }}
       {...props}
     />
