@@ -1,12 +1,23 @@
-import OpenAI from 'openai';
+export async function generateCode(prompt: string, existingCode?: string): Promise<string> {
+  try {
+    const response = await fetch('/api/generate', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ prompt, existingCode }),
+    });
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-  dangerouslyAllowBrowser: true,
-});
+    if (!response.ok) {
+      throw new Error('Failed to generate code');
+    }
 
-if (!process.env.OPENAI_API_KEY) {
-  console.warn('Warning: OPENAI_API_KEY environment variable is not set');
+    const data = await response.json();
+    return data.code;
+  } catch (error) {
+    console.error('API Error:', error);
+    throw new Error('Failed to generate code. Please try again.');
+  }
 }
 
 const HTML_TEMPLATE = `<!DOCTYPE html>
