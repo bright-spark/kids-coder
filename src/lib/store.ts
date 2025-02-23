@@ -45,8 +45,8 @@ export const useAppStore = create<AppState>((set) => ({
   setActiveTab: (tab: string) => set({ activeTab: tab }),
   setProcessing: (state: boolean) => set({ isProcessing: state }),
   setChatState: (chatState: Partial<ChatState>) =>
-    set(() => ({
-      chat: { ...chat.chat, ...chatState },
+    set((state) => ({
+      chat: { ...state.chat, ...chatState },
     })),
   clearChat: () =>
     set(() => ({
