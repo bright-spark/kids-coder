@@ -1,9 +1,13 @@
 import OpenAI from 'openai';
 
 const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
+  apiKey: process.env.OPENAI_API_KEY || '',
   dangerouslyAllowBrowser: true,
 });
+
+if (!process.env.OPENAI_API_KEY) {
+  throw new Error('OPENAI_API_KEY is not set in environment variables');
+}
 
 const HTML_TEMPLATE = `<!DOCTYPE html>
 <html lang="en">
