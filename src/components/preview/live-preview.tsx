@@ -75,7 +75,7 @@ export function LivePreview({ code }: LivePreviewProps) {
           title="preview"
           className="w-full h-full rounded-lg bg-white"
           sandbox="allow-scripts allow-forms allow-same-origin allow-modals allow-popups allow-presentation"
-          onError={() => {
+          onError={(_e) => {
             setError({
               message: 'Failed to render preview',
               type: 'error'
