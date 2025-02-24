@@ -19,6 +19,10 @@ export default [
         project: './tsconfig.json'
       }
     },
+    extends: [
+      'plugin:@next/next/recommended',
+      'plugin:@next/next/core-web-vitals'
+    ],
     rules: {
       '@next/next/no-html-link-for-pages': 'error',
       '@next/next/no-img-element': 'error',
