@@ -1,9 +1,19 @@
 
 import { extractCodeAndExplanation } from '../utils/message-formatter';
 
-export async function generateCode(prompt: string, existingCode?: string): Promise<string> {
-  try {
-    const response = await fetch('/api/generate', {
+interface GenerateResponse {
+  code: string;
+  error?: string;
+}
+
+const MAX_RETRIES = 3;
+const RETRY_DELAY = 1000;
+
+export async function generateCode(prompt: string, existingCode?: string): Promise<GenerateResponse> {
+  let attempts = 0;
+  while (attempts < MAX_RETRIES) {
+    try {
+      const response = await fetch('/api/generate', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -19,7 +29,11 @@ export async function generateCode(prompt: string, existingCode?: string): Promi
     const data = await response.json();
     return data.code;
   } catch (error) {
-    throw new Error(error instanceof Error ? error.message : 'Failed to generate code');
+    attempts++;
+    if (attempts === MAX_RETRIES) {
+      throw new Error(error instanceof Error ? error.message : 'Failed to generate code');
+    }
+    await new Promise(resolve => setTimeout(resolve, RETRY_DELAY));
   }
 }
 

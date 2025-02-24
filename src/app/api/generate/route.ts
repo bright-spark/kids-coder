@@ -67,12 +67,13 @@ export async function POST(req: Request) {
     }
 
     const completion = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
+      model: "gpt-4",
       messages,
       temperature: 0.7,
       max_tokens: 2048,
       frequency_penalty: 0.2,
-      presence_penalty: 0.3
+      presence_penalty: 0.3,
+      timeout: 30000
     });
 
     return NextResponse.json({ 
