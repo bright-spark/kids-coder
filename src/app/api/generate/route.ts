@@ -41,8 +41,15 @@ ${HTML_TEMPLATE}
 - ALWAYS use emojis instead of images for image sources in code.
 - ALWAYS return complete, runnable HTML files with embedded CSS/JS.
 - NEVER include external libraries besides for Tailwind.
-- NEVER include any explanatory text before or after the code.
-- NEVER include opening or closing backtick code like \`\`\`html and \`\`\` or any other language delimeters at all.
+- NEVER use any external CSS/JS libraries.
+- NEVER use any external images.
+- NEVER use any external fonts.
+- NEVER add project dependencies.
+- NEVER use any external APIs.
+- NEVER use any external services.
+- NEVER use any external libraries.
+- NEVER include any explanatory text or project comments before or after the code.
+- NEVER include opening or closing backtick code or any other language delimeters at all.
 - NEVER include any text before or after the code.
 - ONLY return the HTML code, nothing else.
 - REMEMBER when given existing code, maintain its core concepts and theme while making dynamic improvements`;
