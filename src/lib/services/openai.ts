@@ -1,6 +1,4 @@
 
-import { extractCodeAndExplanation } from '../utils/message-formatter';
-
 interface GenerateResponse {
   code: string;
   error?: string;
@@ -34,7 +32,7 @@ export async function generateCode(prompt: string, existingCode?: string): Promi
       throw new Error(error.error || 'Failed to generate code');
     }
 
-    const data = await response.json();
+    const data: GenerateResponse = await response.json();
     return data.code;
   });
 }
