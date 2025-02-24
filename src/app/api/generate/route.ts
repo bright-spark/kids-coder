@@ -1,10 +1,5 @@
-import { OpenAI } from 'openai';
 import { NextResponse } from 'next/server';
 import Cerebras from '@cerebras/cerebras_cloud_sdk';
-
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY
-});
 
 const cerebras = new Cerebras({
   apiKey: process.env.CEREBRAS_API_KEY
@@ -56,7 +51,7 @@ ${HTML_TEMPLATE}
 
 export async function POST(req: Request) {
   try {
-    const { prompt, existingCode, model = 'openai' } = await req.json();
+    const { prompt, existingCode } = await req.json();
 
     const messages = [
       { role: "system", content: SYSTEM_PROMPT },
@@ -79,28 +74,17 @@ export async function POST(req: Request) {
     }
 
     let content = '';
+    const stream = await cerebras.chat.completions.create({
+      messages,
+      model: 'llama3.1-8b',
+      stream: true,
+      max_completion_tokens: 2048,
+      temperature: 0.7,
+      top_p: 0.9
+    });
 
-    if (model === 'cerebras') {
-      const stream = await cerebras.chat.completions.create({
-        messages,
-        model: 'llama3.1-8b',
-        stream: true,
-        max_completion_tokens: 4096,
-        temperature: 0.9,
-        top_p: 1
-      });
-
-      for await (const chunk of stream) {
-        content += chunk.choices[0]?.delta?.content || '';
-      }
-    } else {
-      const completion = await openai.chat.completions.create({
-        model: "gpt-4",
-        messages,
-        temperature: 0.9,
-        max_tokens: 4096,
-      });
-      content = completion.choices[0].message.content || '';
+    for await (const chunk of stream) {
+      content += chunk.choices[0]?.delta?.content || '';
     }
 
     return NextResponse.json({ code: content });
