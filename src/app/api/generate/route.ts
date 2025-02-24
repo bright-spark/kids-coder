@@ -63,6 +63,10 @@ export async function POST(req: Request) {
     }
 
     try {
+      if (!process.env.AZURE_OPENAI_KEY || !process.env.AZURE_OPENAI_ENDPOINT) {
+        throw new Error('Azure OpenAI credentials not configured');
+      }
+
       const stream = await client.streamChatCompletions(
         process.env.AZURE_OPENAI_DEPLOYMENT_NAME,
         messages,
@@ -70,9 +74,14 @@ export async function POST(req: Request) {
       );
 
       let content = '';
-      for await (const chunk of stream) {
-        const delta = chunk.choices[0]?.delta?.content;
-        if (delta) content += delta;
+      try {
+        for await (const chunk of stream) {
+          const delta = chunk.choices[0]?.delta?.content;
+          if (delta) content += delta;
+        }
+      } catch (streamError: any) {
+        console.error('Stream Error:', streamError);
+        throw new Error(`Stream error: ${streamError.message}`);
       }
 
       if (!content) {
@@ -81,17 +90,21 @@ export async function POST(req: Request) {
 
       return NextResponse.json({ code: content });
     } catch (error: any) {
-      console.error('Azure OpenAI Error:', {
+      const errorDetails = {
         name: error.name,
         message: error.message,
         status: error.status,
-        code: error.code
-      });
+        code: error.code,
+        type: error.type,
+        stack: error.stack
+      };
+      
+      console.error('Azure OpenAI Error Details:', errorDetails);
       
       return NextResponse.json(
         { 
           error: error.message || 'Failed to generate code',
-          code: error.code
+          details: errorDetails
         },
         { status: error.status || 500 }
       );
