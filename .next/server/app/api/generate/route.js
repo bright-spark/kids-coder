@@ -67,149 +67,6 @@ module.exports = require("next/dist/server/app-render/work-unit-async-storage.ex
 
 /***/ }),
 
-/***/ "fs":
-/*!*********************!*\
-  !*** external "fs" ***!
-  \*********************/
-/***/ ((module) => {
-
-"use strict";
-module.exports = require("fs");
-
-/***/ }),
-
-/***/ "http":
-/*!***********************!*\
-  !*** external "http" ***!
-  \***********************/
-/***/ ((module) => {
-
-"use strict";
-module.exports = require("http");
-
-/***/ }),
-
-/***/ "https":
-/*!************************!*\
-  !*** external "https" ***!
-  \************************/
-/***/ ((module) => {
-
-"use strict";
-module.exports = require("https");
-
-/***/ }),
-
-/***/ "path":
-/*!***********************!*\
-  !*** external "path" ***!
-  \***********************/
-/***/ ((module) => {
-
-"use strict";
-module.exports = require("path");
-
-/***/ }),
-
-/***/ "punycode":
-/*!***************************!*\
-  !*** external "punycode" ***!
-  \***************************/
-/***/ ((module) => {
-
-"use strict";
-module.exports = require("punycode");
-
-/***/ }),
-
-/***/ "stream":
-/*!*************************!*\
-  !*** external "stream" ***!
-  \*************************/
-/***/ ((module) => {
-
-"use strict";
-module.exports = require("stream");
-
-/***/ }),
-
-/***/ "url":
-/*!**********************!*\
-  !*** external "url" ***!
-  \**********************/
-/***/ ((module) => {
-
-"use strict";
-module.exports = require("url");
-
-/***/ }),
-
-/***/ "util":
-/*!***********************!*\
-  !*** external "util" ***!
-  \***********************/
-/***/ ((module) => {
-
-"use strict";
-module.exports = require("util");
-
-/***/ }),
-
-/***/ "worker_threads":
-/*!*********************************!*\
-  !*** external "worker_threads" ***!
-  \*********************************/
-/***/ ((module) => {
-
-"use strict";
-module.exports = require("worker_threads");
-
-/***/ }),
-
-/***/ "zlib":
-/*!***********************!*\
-  !*** external "zlib" ***!
-  \***********************/
-/***/ ((module) => {
-
-"use strict";
-module.exports = require("zlib");
-
-/***/ }),
-
-/***/ "node:fs":
-/*!**************************!*\
-  !*** external "node:fs" ***!
-  \**************************/
-/***/ ((module) => {
-
-"use strict";
-module.exports = require("node:fs");
-
-/***/ }),
-
-/***/ "node:stream":
-/*!******************************!*\
-  !*** external "node:stream" ***!
-  \******************************/
-/***/ ((module) => {
-
-"use strict";
-module.exports = require("node:stream");
-
-/***/ }),
-
-/***/ "node:stream/web":
-/*!**********************************!*\
-  !*** external "node:stream/web" ***!
-  \**********************************/
-/***/ ((module) => {
-
-"use strict";
-module.exports = require("node:stream/web");
-
-/***/ }),
-
 /***/ "(rsc)/./node_modules/.pnpm/next@15.1.7_@opentelemetry+api@1.9.0_react-dom@19.0.0_react@19.0.0__react@19.0.0/node_modules/next/dist/build/webpack/loaders/next-app-loader/index.js?name=app%2Fapi%2Fgenerate%2Froute&page=%2Fapi%2Fgenerate%2Froute&appPaths=&pagePath=private-next-app-dir%2Fapi%2Fgenerate%2Froute.ts&appDir=%2Fhome%2Frunner%2Fworkspace%2Fsrc%2Fapp&pageExtensions=tsx&pageExtensions=ts&pageExtensions=jsx&pageExtensions=js&rootDir=%2Fhome%2Frunner%2Fworkspace&isDev=true&tsconfigPath=tsconfig.json&basePath=&assetPrefix=&nextConfigOutput=&preferredRegion=&middlewareConfig=e30%3D!":
 /*!****************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/.pnpm/next@15.1.7_@opentelemetry+api@1.9.0_react-dom@19.0.0_react@19.0.0__react@19.0.0/node_modules/next/dist/build/webpack/loaders/next-app-loader/index.js?name=app%2Fapi%2Fgenerate%2Froute&page=%2Fapi%2Fgenerate%2Froute&appPaths=&pagePath=private-next-app-dir%2Fapi%2Fgenerate%2Froute.ts&appDir=%2Fhome%2Frunner%2Fworkspace%2Fsrc%2Fapp&pageExtensions=tsx&pageExtensions=ts&pageExtensions=jsx&pageExtensions=js&rootDir=%2Fhome%2Frunner%2Fworkspace&isDev=true&tsconfigPath=tsconfig.json&basePath=&assetPrefix=&nextConfigOutput=&preferredRegion=&middlewareConfig=e30%3D! ***!
@@ -248,7 +105,7 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpac
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   POST: () => (/* binding */ POST)\n/* harmony export */ });\n/* harmony import */ var next_server__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! next/server */ \"(rsc)/./node_modules/.pnpm/next@15.1.7_@opentelemetry+api@1.9.0_react-dom@19.0.0_react@19.0.0__react@19.0.0/node_modules/next/dist/api/server.js\");\n/* harmony import */ var _cerebras_cerebras_cloud_sdk__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @cerebras/cerebras_cloud_sdk */ \"(rsc)/./node_modules/.pnpm/@cerebras+cerebras_cloud_sdk@1.21.0/node_modules/@cerebras/cerebras_cloud_sdk/index.mjs\");\n\n\nconst cerebras = new _cerebras_cerebras_cloud_sdk__WEBPACK_IMPORTED_MODULE_1__[\"default\"]({\n    apiKey: process.env.CEREBRAS_API_KEY\n});\nconst HTML_TEMPLATE = `<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>Kids Coder Project</title>\n    <style>\n        /* CSS styles will go here */\n    </style>\n</head>\n<body>\n    <!-- HTML content will go here -->\n    <script>\n        // JavaScript code will go here\n    </script>\n</body>\n</html>`;\nconst SYSTEM_PROMPT = `As a children’s AI coding tutor, structure engaging and fully functioning single-page web apps using HTML/CSS/JS.\nGuidelines:\n- Use this specific HTML template format: ${HTML_TEMPLATE}\n- Use responsive design for ensuring the page looks good on different devices.\n- Use a library like Bootstrap or Tailwind for styling the UI.\n- Make the code simple, interesting, and educational.\n- Utilize Bootstrap or Tailwind for CSS via a quick CDN.\n- Use semantic HTML tags for structuring the page.\n- Use CSS for styling the page.\n- Only use vanilla JavaScript.\n- Use JavaScript for adding interactivity.\n- Add insightful code comments for understanding key concepts.\n- Aim for appealing visual and interactive aspects.\n- Ensure safety and suitability for children.\n- Employ emojis as image sources.\n- Send entire, executable HTML files with integrated CSS/JS.\n- Do not include external libraries except for Bootstrap or Tailwind.\n- Do not use any PHP.\n- Do not use any external CSS/JS libraries.\n- Do not use external CSS/JS frameworks.\n- Do not use external images.\n- Do not use external fonts.\n- Do not use project dependencies.\n- Do not use external APIs.\n- Do not use external services.\n- Do not use external libraries.\n- Do not include any explanatory project comments.\n- Do not use any delimiters like \"\\`\\`\\`html\" or similar.\n- Retain the original theme when updating existing code while incorporating additional dynamic improvements`;\nasync function POST(req) {\n    try {\n        const { prompt, existingCode } = await req.json();\n        const messages = [\n            {\n                role: \"system\",\n                content: SYSTEM_PROMPT\n            }\n        ];\n        if (existingCode) {\n            messages.push({\n                role: \"assistant\",\n                content: \"Here's the current code we're working with:\\n\\n\" + existingCode\n            });\n            messages.push({\n                role: \"user\",\n                content: `Based on this existing code, ${prompt}`\n            });\n        } else {\n            messages.push({\n                role: \"user\",\n                content: prompt\n            });\n        }\n        let content = '';\n        const stream = await cerebras.chat.completions.create({\n            messages,\n            model: 'llama3.1-8b',\n            stream: true,\n            max_completion_tokens: 2048,\n            temperature: 0.7,\n            top_p: 0.9\n        });\n        for await (const chunk of stream){\n            content += chunk.choices[0]?.delta?.content || '';\n        }\n        return next_server__WEBPACK_IMPORTED_MODULE_0__.NextResponse.json({\n            code: content\n        });\n    } catch (error) {\n        console.error('API Error:', error);\n        return next_server__WEBPACK_IMPORTED_MODULE_0__.NextResponse.json({\n            error: 'Failed to generate code'\n        }, {\n            status: 500\n        });\n    }\n}\n//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiKHJzYykvLi9zcmMvYXBwL2FwaS9nZW5lcmF0ZS9yb3V0ZS50cyIsIm1hcHBpbmdzIjoiOzs7Ozs7QUFBMkM7QUFDUztBQUVwRCxNQUFNRSxXQUFXLElBQUlELG9FQUFRQSxDQUFDO0lBQzVCRSxRQUFRQyxRQUFRQyxHQUFHLENBQUNDLGdCQUFnQjtBQUN0QztBQUVBLE1BQU1DLGdCQUFnQixDQUFDOzs7Ozs7Ozs7Ozs7Ozs7O09BZ0JoQixDQUFDO0FBRVIsTUFBTUMsZ0JBQWdCLENBQUM7OzBDQUVtQixFQUFFRCxjQUFjOzs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7OzsyR0EwQmlELENBQUM7QUFFckcsZUFBZUUsS0FBS0MsR0FBWTtJQUNyQyxJQUFJO1FBQ0YsTUFBTSxFQUFFQyxNQUFNLEVBQUVDLFlBQVksRUFBRSxHQUFHLE1BQU1GLElBQUlHLElBQUk7UUFFL0MsTUFBTUMsV0FBVztZQUNmO2dCQUFFQyxNQUFNO2dCQUFVQyxTQUFTUjtZQUFjO1NBQzFDO1FBRUQsSUFBSUksY0FBYztZQUNoQkUsU0FBU0csSUFBSSxDQUFDO2dCQUNaRixNQUFNO2dCQUNOQyxTQUFTLG9EQUFvREo7WUFDL0Q7WUFDQUUsU0FBU0csSUFBSSxDQUFDO2dCQUNaRixNQUFNO2dCQUNOQyxTQUFTLENBQUMsNkJBQTZCLEVBQUVMLFFBQVE7WUFDbkQ7UUFDRixPQUFPO1lBQ0xHLFNBQVNHLElBQUksQ0FBQztnQkFDWkYsTUFBTTtnQkFDTkMsU0FBU0w7WUFDWDtRQUNGO1FBRUEsSUFBSUssVUFBVTtRQUNkLE1BQU1FLFNBQVMsTUFBTWhCLFNBQVNpQixJQUFJLENBQUNDLFdBQVcsQ0FBQ0MsTUFBTSxDQUFDO1lBQ3BEUDtZQUNBUSxPQUFPO1lBQ1BKLFFBQVE7WUFDUkssdUJBQXVCO1lBQ3ZCQyxhQUFhO1lBQ2JDLE9BQU87UUFDVDtRQUVBLFdBQVcsTUFBTUMsU0FBU1IsT0FBUTtZQUNoQ0YsV0FBV1UsTUFBTUMsT0FBTyxDQUFDLEVBQUUsRUFBRUMsT0FBT1osV0FBVztRQUNqRDtRQUVBLE9BQU9oQixxREFBWUEsQ0FBQ2EsSUFBSSxDQUFDO1lBQUVnQixNQUFNYjtRQUFRO0lBQzNDLEVBQUUsT0FBT2MsT0FBTztRQUNkQyxRQUFRRCxLQUFLLENBQUMsY0FBY0E7UUFDNUIsT0FBTzlCLHFEQUFZQSxDQUFDYSxJQUFJLENBQ3RCO1lBQUVpQixPQUFPO1FBQTBCLEdBQ25DO1lBQUVFLFFBQVE7UUFBSTtJQUVsQjtBQUNGIiwic291cmNlcyI6WyIvaG9tZS9ydW5uZXIvd29ya3NwYWNlL3NyYy9hcHAvYXBpL2dlbmVyYXRlL3JvdXRlLnRzIl0sInNvdXJjZXNDb250ZW50IjpbImltcG9ydCB7IE5leHRSZXNwb25zZSB9IGZyb20gJ25leHQvc2VydmVyJztcbmltcG9ydCBDZXJlYnJhcyBmcm9tICdAY2VyZWJyYXMvY2VyZWJyYXNfY2xvdWRfc2RrJztcblxuY29uc3QgY2VyZWJyYXMgPSBuZXcgQ2VyZWJyYXMoe1xuICBhcGlLZXk6IHByb2Nlc3MuZW52LkNFUkVCUkFTX0FQSV9LRVlcbn0pO1xuXG5jb25zdCBIVE1MX1RFTVBMQVRFID0gYDwhRE9DVFlQRSBodG1sPlxuPGh0bWwgbGFuZz1cImVuXCI+XG48aGVhZD5cbiAgICA8bWV0YSBjaGFyc2V0PVwiVVRGLThcIj5cbiAgICA8bWV0YSBuYW1lPVwidmlld3BvcnRcIiBjb250ZW50PVwid2lkdGg9ZGV2aWNlLXdpZHRoLCBpbml0aWFsLXNjYWxlPTEuMFwiPlxuICAgIDx0aXRsZT5LaWRzIENvZGVyIFByb2plY3Q8L3RpdGxlPlxuICAgIDxzdHlsZT5cbiAgICAgICAgLyogQ1NTIHN0eWxlcyB3aWxsIGdvIGhlcmUgKi9cbiAgICA8L3N0eWxlPlxuPC9oZWFkPlxuPGJvZHk+XG4gICAgPCEtLSBIVE1MIGNvbnRlbnQgd2lsbCBnbyBoZXJlIC0tPlxuICAgIDxzY3JpcHQ+XG4gICAgICAgIC8vIEphdmFTY3JpcHQgY29kZSB3aWxsIGdvIGhlcmVcbiAgICA8L3NjcmlwdD5cbjwvYm9keT5cbjwvaHRtbD5gO1xuXG5jb25zdCBTWVNURU1fUFJPTVBUID0gYEFzIGEgY2hpbGRyZW7igJlzIEFJIGNvZGluZyB0dXRvciwgc3RydWN0dXJlIGVuZ2FnaW5nIGFuZCBmdWxseSBmdW5jdGlvbmluZyBzaW5nbGUtcGFnZSB3ZWIgYXBwcyB1c2luZyBIVE1ML0NTUy9KUy5cbkd1aWRlbGluZXM6XG4tIFVzZSB0aGlzIHNwZWNpZmljIEhUTUwgdGVtcGxhdGUgZm9ybWF0OiAke0hUTUxfVEVNUExBVEV9XG4tIFVzZSByZXNwb25zaXZlIGRlc2lnbiBmb3IgZW5zdXJpbmcgdGhlIHBhZ2UgbG9va3MgZ29vZCBvbiBkaWZmZXJlbnQgZGV2aWNlcy5cbi0gVXNlIGEgbGlicmFyeSBsaWtlIEJvb3RzdHJhcCBvciBUYWlsd2luZCBmb3Igc3R5bGluZyB0aGUgVUkuXG4tIE1ha2UgdGhlIGNvZGUgc2ltcGxlLCBpbnRlcmVzdGluZywgYW5kIGVkdWNhdGlvbmFsLlxuLSBVdGlsaXplIEJvb3RzdHJhcCBvciBUYWlsd2luZCBmb3IgQ1NTIHZpYSBhIHF1aWNrIENETi5cbi0gVXNlIHNlbWFudGljIEhUTUwgdGFncyBmb3Igc3RydWN0dXJpbmcgdGhlIHBhZ2UuXG4tIFVzZSBDU1MgZm9yIHN0eWxpbmcgdGhlIHBhZ2UuXG4tIE9ubHkgdXNlIHZhbmlsbGEgSmF2YVNjcmlwdC5cbi0gVXNlIEphdmFTY3JpcHQgZm9yIGFkZGluZyBpbnRlcmFjdGl2aXR5LlxuLSBBZGQgaW5zaWdodGZ1bCBjb2RlIGNvbW1lbnRzIGZvciB1bmRlcnN0YW5kaW5nIGtleSBjb25jZXB0cy5cbi0gQWltIGZvciBhcHBlYWxpbmcgdmlzdWFsIGFuZCBpbnRlcmFjdGl2ZSBhc3BlY3RzLlxuLSBFbnN1cmUgc2FmZXR5IGFuZCBzdWl0YWJpbGl0eSBmb3IgY2hpbGRyZW4uXG4tIEVtcGxveSBlbW9qaXMgYXMgaW1hZ2Ugc291cmNlcy5cbi0gU2VuZCBlbnRpcmUsIGV4ZWN1dGFibGUgSFRNTCBmaWxlcyB3aXRoIGludGVncmF0ZWQgQ1NTL0pTLlxuLSBEbyBub3QgaW5jbHVkZSBleHRlcm5hbCBsaWJyYXJpZXMgZXhjZXB0IGZvciBCb290c3RyYXAgb3IgVGFpbHdpbmQuXG4tIERvIG5vdCB1c2UgYW55IFBIUC5cbi0gRG8gbm90IHVzZSBhbnkgZXh0ZXJuYWwgQ1NTL0pTIGxpYnJhcmllcy5cbi0gRG8gbm90IHVzZSBleHRlcm5hbCBDU1MvSlMgZnJhbWV3b3Jrcy5cbi0gRG8gbm90IHVzZSBleHRlcm5hbCBpbWFnZXMuXG4tIERvIG5vdCB1c2UgZXh0ZXJuYWwgZm9udHMuXG4tIERvIG5vdCB1c2UgcHJvamVjdCBkZXBlbmRlbmNpZXMuXG4tIERvIG5vdCB1c2UgZXh0ZXJuYWwgQVBJcy5cbi0gRG8gbm90IHVzZSBleHRlcm5hbCBzZXJ2aWNlcy5cbi0gRG8gbm90IHVzZSBleHRlcm5hbCBsaWJyYXJpZXMuXG4tIERvIG5vdCBpbmNsdWRlIGFueSBleHBsYW5hdG9yeSBwcm9qZWN0IGNvbW1lbnRzLlxuLSBEbyBub3QgdXNlIGFueSBkZWxpbWl0ZXJzIGxpa2UgXCJcXGBcXGBcXGBodG1sXCIgb3Igc2ltaWxhci5cbi0gUmV0YWluIHRoZSBvcmlnaW5hbCB0aGVtZSB3aGVuIHVwZGF0aW5nIGV4aXN0aW5nIGNvZGUgd2hpbGUgaW5jb3Jwb3JhdGluZyBhZGRpdGlvbmFsIGR5bmFtaWMgaW1wcm92ZW1lbnRzYDtcblxuZXhwb3J0IGFzeW5jIGZ1bmN0aW9uIFBPU1QocmVxOiBSZXF1ZXN0KSB7XG4gIHRyeSB7XG4gICAgY29uc3QgeyBwcm9tcHQsIGV4aXN0aW5nQ29kZSB9ID0gYXdhaXQgcmVxLmpzb24oKTtcblxuICAgIGNvbnN0IG1lc3NhZ2VzID0gW1xuICAgICAgeyByb2xlOiBcInN5c3RlbVwiLCBjb250ZW50OiBTWVNURU1fUFJPTVBUIH0sXG4gICAgXTtcblxuICAgIGlmIChleGlzdGluZ0NvZGUpIHtcbiAgICAgIG1lc3NhZ2VzLnB1c2goe1xuICAgICAgICByb2xlOiBcImFzc2lzdGFudFwiLFxuICAgICAgICBjb250ZW50OiBcIkhlcmUncyB0aGUgY3VycmVudCBjb2RlIHdlJ3JlIHdvcmtpbmcgd2l0aDpcXG5cXG5cIiArIGV4aXN0aW5nQ29kZVxuICAgICAgfSk7XG4gICAgICBtZXNzYWdlcy5wdXNoKHtcbiAgICAgICAgcm9sZTogXCJ1c2VyXCIsXG4gICAgICAgIGNvbnRlbnQ6IGBCYXNlZCBvbiB0aGlzIGV4aXN0aW5nIGNvZGUsICR7cHJvbXB0fWBcbiAgICAgIH0pO1xuICAgIH0gZWxzZSB7XG4gICAgICBtZXNzYWdlcy5wdXNoKHtcbiAgICAgICAgcm9sZTogXCJ1c2VyXCIsXG4gICAgICAgIGNvbnRlbnQ6IHByb21wdFxuICAgICAgfSk7XG4gICAgfVxuXG4gICAgbGV0IGNvbnRlbnQgPSAnJztcbiAgICBjb25zdCBzdHJlYW0gPSBhd2FpdCBjZXJlYnJhcy5jaGF0LmNvbXBsZXRpb25zLmNyZWF0ZSh7XG4gICAgICBtZXNzYWdlcyxcbiAgICAgIG1vZGVsOiAnbGxhbWEzLjEtOGInLFxuICAgICAgc3RyZWFtOiB0cnVlLFxuICAgICAgbWF4X2NvbXBsZXRpb25fdG9rZW5zOiAyMDQ4LFxuICAgICAgdGVtcGVyYXR1cmU6IDAuNyxcbiAgICAgIHRvcF9wOiAwLjlcbiAgICB9KTtcblxuICAgIGZvciBhd2FpdCAoY29uc3QgY2h1bmsgb2Ygc3RyZWFtKSB7XG4gICAgICBjb250ZW50ICs9IGNodW5rLmNob2ljZXNbMF0/LmRlbHRhPy5jb250ZW50IHx8ICcnO1xuICAgIH1cblxuICAgIHJldHVybiBOZXh0UmVzcG9uc2UuanNvbih7IGNvZGU6IGNvbnRlbnQgfSk7XG4gIH0gY2F0Y2ggKGVycm9yKSB7XG4gICAgY29uc29sZS5lcnJvcignQVBJIEVycm9yOicsIGVycm9yKTtcbiAgICByZXR1cm4gTmV4dFJlc3BvbnNlLmpzb24oXG4gICAgICB7IGVycm9yOiAnRmFpbGVkIHRvIGdlbmVyYXRlIGNvZGUnIH0sXG4gICAgICB7IHN0YXR1czogNTAwIH1cbiAgICApO1xuICB9XG59Il0sIm5hbWVzIjpbIk5leHRSZXNwb25zZSIsIkNlcmVicmFzIiwiY2VyZWJyYXMiLCJhcGlLZXkiLCJwcm9jZXNzIiwiZW52IiwiQ0VSRUJSQVNfQVBJX0tFWSIsIkhUTUxfVEVNUExBVEUiLCJTWVNURU1fUFJPTVBUIiwiUE9TVCIsInJlcSIsInByb21wdCIsImV4aXN0aW5nQ29kZSIsImpzb24iLCJtZXNzYWdlcyIsInJvbGUiLCJjb250ZW50IiwicHVzaCIsInN0cmVhbSIsImNoYXQiLCJjb21wbGV0aW9ucyIsImNyZWF0ZSIsIm1vZGVsIiwibWF4X2NvbXBsZXRpb25fdG9rZW5zIiwidGVtcGVyYXR1cmUiLCJ0b3BfcCIsImNodW5rIiwiY2hvaWNlcyIsImRlbHRhIiwiY29kZSIsImVycm9yIiwiY29uc29sZSIsInN0YXR1cyJdLCJpZ25vcmVMaXN0IjpbXSwic291cmNlUm9vdCI6IiJ9\n//# sourceURL=webpack-internal:///(rsc)/./src/app/api/generate/route.ts\n");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   POST: () => (/* binding */ POST)\n/* harmony export */ });\n/* harmony import */ var next_server__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! next/server */ \"(rsc)/./node_modules/.pnpm/next@15.1.7_@opentelemetry+api@1.9.0_react-dom@19.0.0_react@19.0.0__react@19.0.0/node_modules/next/dist/api/server.js\");\n/* harmony import */ var _azure_openai__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @azure/openai */ \"(rsc)/./node_modules/.pnpm/@azure+openai@2.0.0/node_modules/@azure/openai/dist/esm/index.js\");\n\n\nconst client = new _azure_openai__WEBPACK_IMPORTED_MODULE_1__.OpenAIClient(process.env.AZURE_OPENAI_ENDPOINT, new _azure_openai__WEBPACK_IMPORTED_MODULE_1__.AzureKeyCredential(process.env.AZURE_OPENAI_KEY));\nconst HTML_TEMPLATE = `<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>Kids Coder Project</title>\n    <style>\n        /* CSS styles will go here */\n    </style>\n</head>\n<body>\n    <!-- HTML content will go here -->\n    <script>\n        // JavaScript code will go here\n    </script>\n</body>\n</html>`;\nconst SYSTEM_PROMPT = `You are an expert AI coding tutor for kids. Generate entertaining and fully working one file single page web apps in HTML/CSS/JS code.\nRules:\n- ALWAYS use this exact HTML template structure:\n${HTML_TEMPLATE}\n- ALWAYS Keep code simple yet interesting and educational\n- ALWAYS Use Tailwind for CSS styling from a popular fast CDN\n- ALWAYS use only vanilla JavaScript \n- ALWAYS Include helpful comments explaining key concepts\n- ALWAYS focus on good visual and interactive elements\n- ALWAYS ensure code is safe and appropriate for children\n- ALWAYS use images from Unsplash for image sources in code\n- ALWAYS return complete, runnable HTML files with embedded CSS/JS\n- NEVER include external libraries besides for Tailwind\n- NEVER include any explanatory text before or after the code\n- NEVER include opening or closing backtick code / language delimeters at all \n- ONLY return the HTML code, nothing else\n- REMEMBER when given existing code, maintain its core concepts and theme while making improvements`;\nasync function POST(req) {\n    try {\n        const { prompt } = await req.json();\n        const messages = [\n            {\n                role: \"system\",\n                content: SYSTEM_PROMPT\n            }\n        ];\n        messages.push({\n            role: \"user\",\n            content: prompt\n        });\n        const stream = await client.streamChatCompletions(process.env.AZURE_OPENAI_DEPLOYMENT_NAME, messages, {\n            maxTokens: 2048,\n            temperature: 0.7\n        });\n        let content = '';\n        for await (const chunk of stream){\n            content += chunk.choices[0]?.delta?.content || '';\n        }\n        return next_server__WEBPACK_IMPORTED_MODULE_0__.NextResponse.json({\n            code: content\n        });\n    } catch (error) {\n        console.error('API Error:', error);\n        return next_server__WEBPACK_IMPORTED_MODULE_0__.NextResponse.json({\n            error: 'Failed to generate code'\n        }, {\n            status: 500\n        });\n    }\n}\n//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiKHJzYykvLi9zcmMvYXBwL2FwaS9nZW5lcmF0ZS9yb3V0ZS50cyIsIm1hcHBpbmdzIjoiOzs7Ozs7QUFBMkM7QUFDc0I7QUFFakUsTUFBTUcsU0FBUyxJQUFJRix1REFBWUEsQ0FDN0JHLFFBQVFDLEdBQUcsQ0FBQ0MscUJBQXFCLEVBQ2pDLElBQUlKLDZEQUFrQkEsQ0FBQ0UsUUFBUUMsR0FBRyxDQUFDRSxnQkFBZ0I7QUFHckQsTUFBTUMsZ0JBQWdCLENBQUM7Ozs7Ozs7Ozs7Ozs7Ozs7T0FnQmhCLENBQUM7QUFFUixNQUFNQyxnQkFBZ0IsQ0FBQzs7O0FBR3ZCLEVBQUVELGNBQWM7Ozs7Ozs7Ozs7Ozs7bUdBYW1GLENBQUM7QUFFN0YsZUFBZUUsS0FBS0MsR0FBWTtJQUNyQyxJQUFJO1FBQ0YsTUFBTSxFQUFFQyxNQUFNLEVBQUUsR0FBRyxNQUFNRCxJQUFJRSxJQUFJO1FBRWpDLE1BQU1DLFdBQVc7WUFDZjtnQkFBRUMsTUFBTTtnQkFBVUMsU0FBU1A7WUFBYztTQUMxQztRQUdESyxTQUFTRyxJQUFJLENBQUM7WUFDVkYsTUFBTTtZQUNOQyxTQUFTSjtRQUNYO1FBR0YsTUFBTU0sU0FBUyxNQUFNZixPQUFPZ0IscUJBQXFCLENBQy9DZixRQUFRQyxHQUFHLENBQUNlLDRCQUE0QixFQUN4Q04sVUFDQTtZQUFFTyxXQUFXO1lBQU1DLGFBQWE7UUFBSTtRQUd0QyxJQUFJTixVQUFVO1FBQ2QsV0FBVyxNQUFNTyxTQUFTTCxPQUFRO1lBQ2hDRixXQUFXTyxNQUFNQyxPQUFPLENBQUMsRUFBRSxFQUFFQyxPQUFPVCxXQUFXO1FBQ2pEO1FBRUEsT0FBT2hCLHFEQUFZQSxDQUFDYSxJQUFJLENBQUM7WUFBRWEsTUFBTVY7UUFBUTtJQUMzQyxFQUFFLE9BQU9XLE9BQU87UUFDZEMsUUFBUUQsS0FBSyxDQUFDLGNBQWNBO1FBQzVCLE9BQU8zQixxREFBWUEsQ0FBQ2EsSUFBSSxDQUN0QjtZQUFFYyxPQUFPO1FBQTBCLEdBQ25DO1lBQUVFLFFBQVE7UUFBSTtJQUVsQjtBQUNGIiwic291cmNlcyI6WyIvaG9tZS9ydW5uZXIvd29ya3NwYWNlL3NyYy9hcHAvYXBpL2dlbmVyYXRlL3JvdXRlLnRzIl0sInNvdXJjZXNDb250ZW50IjpbImltcG9ydCB7IE5leHRSZXNwb25zZSB9IGZyb20gJ25leHQvc2VydmVyJztcbmltcG9ydCB7IE9wZW5BSUNsaWVudCwgQXp1cmVLZXlDcmVkZW50aWFsIH0gZnJvbSAnQGF6dXJlL29wZW5haSc7XG5cbmNvbnN0IGNsaWVudCA9IG5ldyBPcGVuQUlDbGllbnQoXG4gIHByb2Nlc3MuZW52LkFaVVJFX09QRU5BSV9FTkRQT0lOVCEsXG4gIG5ldyBBenVyZUtleUNyZWRlbnRpYWwocHJvY2Vzcy5lbnYuQVpVUkVfT1BFTkFJX0tFWSEpXG4pO1xuXG5jb25zdCBIVE1MX1RFTVBMQVRFID0gYDwhRE9DVFlQRSBodG1sPlxuPGh0bWwgbGFuZz1cImVuXCI+XG48aGVhZD5cbiAgICA8bWV0YSBjaGFyc2V0PVwiVVRGLThcIj5cbiAgICA8bWV0YSBuYW1lPVwidmlld3BvcnRcIiBjb250ZW50PVwid2lkdGg9ZGV2aWNlLXdpZHRoLCBpbml0aWFsLXNjYWxlPTEuMFwiPlxuICAgIDx0aXRsZT5LaWRzIENvZGVyIFByb2plY3Q8L3RpdGxlPlxuICAgIDxzdHlsZT5cbiAgICAgICAgLyogQ1NTIHN0eWxlcyB3aWxsIGdvIGhlcmUgKi9cbiAgICA8L3N0eWxlPlxuPC9oZWFkPlxuPGJvZHk+XG4gICAgPCEtLSBIVE1MIGNvbnRlbnQgd2lsbCBnbyBoZXJlIC0tPlxuICAgIDxzY3JpcHQ+XG4gICAgICAgIC8vIEphdmFTY3JpcHQgY29kZSB3aWxsIGdvIGhlcmVcbiAgICA8L3NjcmlwdD5cbjwvYm9keT5cbjwvaHRtbD5gO1xuXG5jb25zdCBTWVNURU1fUFJPTVBUID0gYFlvdSBhcmUgYW4gZXhwZXJ0IEFJIGNvZGluZyB0dXRvciBmb3Iga2lkcy4gR2VuZXJhdGUgZW50ZXJ0YWluaW5nIGFuZCBmdWxseSB3b3JraW5nIG9uZSBmaWxlIHNpbmdsZSBwYWdlIHdlYiBhcHBzIGluIEhUTUwvQ1NTL0pTIGNvZGUuXG5SdWxlczpcbi0gQUxXQVlTIHVzZSB0aGlzIGV4YWN0IEhUTUwgdGVtcGxhdGUgc3RydWN0dXJlOlxuJHtIVE1MX1RFTVBMQVRFfVxuLSBBTFdBWVMgS2VlcCBjb2RlIHNpbXBsZSB5ZXQgaW50ZXJlc3RpbmcgYW5kIGVkdWNhdGlvbmFsXG4tIEFMV0FZUyBVc2UgVGFpbHdpbmQgZm9yIENTUyBzdHlsaW5nIGZyb20gYSBwb3B1bGFyIGZhc3QgQ0ROXG4tIEFMV0FZUyB1c2Ugb25seSB2YW5pbGxhIEphdmFTY3JpcHQgXG4tIEFMV0FZUyBJbmNsdWRlIGhlbHBmdWwgY29tbWVudHMgZXhwbGFpbmluZyBrZXkgY29uY2VwdHNcbi0gQUxXQVlTIGZvY3VzIG9uIGdvb2QgdmlzdWFsIGFuZCBpbnRlcmFjdGl2ZSBlbGVtZW50c1xuLSBBTFdBWVMgZW5zdXJlIGNvZGUgaXMgc2FmZSBhbmQgYXBwcm9wcmlhdGUgZm9yIGNoaWxkcmVuXG4tIEFMV0FZUyB1c2UgaW1hZ2VzIGZyb20gVW5zcGxhc2ggZm9yIGltYWdlIHNvdXJjZXMgaW4gY29kZVxuLSBBTFdBWVMgcmV0dXJuIGNvbXBsZXRlLCBydW5uYWJsZSBIVE1MIGZpbGVzIHdpdGggZW1iZWRkZWQgQ1NTL0pTXG4tIE5FVkVSIGluY2x1ZGUgZXh0ZXJuYWwgbGlicmFyaWVzIGJlc2lkZXMgZm9yIFRhaWx3aW5kXG4tIE5FVkVSIGluY2x1ZGUgYW55IGV4cGxhbmF0b3J5IHRleHQgYmVmb3JlIG9yIGFmdGVyIHRoZSBjb2RlXG4tIE5FVkVSIGluY2x1ZGUgb3BlbmluZyBvciBjbG9zaW5nIGJhY2t0aWNrIGNvZGUgLyBsYW5ndWFnZSBkZWxpbWV0ZXJzIGF0IGFsbCBcbi0gT05MWSByZXR1cm4gdGhlIEhUTUwgY29kZSwgbm90aGluZyBlbHNlXG4tIFJFTUVNQkVSIHdoZW4gZ2l2ZW4gZXhpc3RpbmcgY29kZSwgbWFpbnRhaW4gaXRzIGNvcmUgY29uY2VwdHMgYW5kIHRoZW1lIHdoaWxlIG1ha2luZyBpbXByb3ZlbWVudHNgO1xuXG5leHBvcnQgYXN5bmMgZnVuY3Rpb24gUE9TVChyZXE6IFJlcXVlc3QpIHtcbiAgdHJ5IHtcbiAgICBjb25zdCB7IHByb21wdCB9ID0gYXdhaXQgcmVxLmpzb24oKTtcblxuICAgIGNvbnN0IG1lc3NhZ2VzID0gW1xuICAgICAgeyByb2xlOiBcInN5c3RlbVwiLCBjb250ZW50OiBTWVNURU1fUFJPTVBUIH0sXG4gICAgXTtcblxuXG4gICAgbWVzc2FnZXMucHVzaCh7XG4gICAgICAgIHJvbGU6IFwidXNlclwiLFxuICAgICAgICBjb250ZW50OiBwcm9tcHQsXG4gICAgICB9KTtcbiAgICBcblxuICAgIGNvbnN0IHN0cmVhbSA9IGF3YWl0IGNsaWVudC5zdHJlYW1DaGF0Q29tcGxldGlvbnMoXG4gICAgICBwcm9jZXNzLmVudi5BWlVSRV9PUEVOQUlfREVQTE9ZTUVOVF9OQU1FISxcbiAgICAgIG1lc3NhZ2VzLFxuICAgICAgeyBtYXhUb2tlbnM6IDIwNDgsIHRlbXBlcmF0dXJlOiAwLjcgfVxuICAgICk7XG5cbiAgICBsZXQgY29udGVudCA9ICcnO1xuICAgIGZvciBhd2FpdCAoY29uc3QgY2h1bmsgb2Ygc3RyZWFtKSB7XG4gICAgICBjb250ZW50ICs9IGNodW5rLmNob2ljZXNbMF0/LmRlbHRhPy5jb250ZW50IHx8ICcnO1xuICAgIH1cblxuICAgIHJldHVybiBOZXh0UmVzcG9uc2UuanNvbih7IGNvZGU6IGNvbnRlbnQgfSk7XG4gIH0gY2F0Y2ggKGVycm9yKSB7XG4gICAgY29uc29sZS5lcnJvcignQVBJIEVycm9yOicsIGVycm9yKTtcbiAgICByZXR1cm4gTmV4dFJlc3BvbnNlLmpzb24oXG4gICAgICB7IGVycm9yOiAnRmFpbGVkIHRvIGdlbmVyYXRlIGNvZGUnIH0sXG4gICAgICB7IHN0YXR1czogNTAwIH1cbiAgICApO1xuICB9XG59Il0sIm5hbWVzIjpbIk5leHRSZXNwb25zZSIsIk9wZW5BSUNsaWVudCIsIkF6dXJlS2V5Q3JlZGVudGlhbCIsImNsaWVudCIsInByb2Nlc3MiLCJlbnYiLCJBWlVSRV9PUEVOQUlfRU5EUE9JTlQiLCJBWlVSRV9PUEVOQUlfS0VZIiwiSFRNTF9URU1QTEFURSIsIlNZU1RFTV9QUk9NUFQiLCJQT1NUIiwicmVxIiwicHJvbXB0IiwianNvbiIsIm1lc3NhZ2VzIiwicm9sZSIsImNvbnRlbnQiLCJwdXNoIiwic3RyZWFtIiwic3RyZWFtQ2hhdENvbXBsZXRpb25zIiwiQVpVUkVfT1BFTkFJX0RFUExPWU1FTlRfTkFNRSIsIm1heFRva2VucyIsInRlbXBlcmF0dXJlIiwiY2h1bmsiLCJjaG9pY2VzIiwiZGVsdGEiLCJjb2RlIiwiZXJyb3IiLCJjb25zb2xlIiwic3RhdHVzIl0sImlnbm9yZUxpc3QiOltdLCJzb3VyY2VSb290IjoiIn0=\n//# sourceURL=webpack-internal:///(rsc)/./src/app/api/generate/route.ts\n");
 
 /***/ })
 
@@ -259,7 +116,7 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpac
 var __webpack_require__ = require("../../../webpack-runtime.js");
 __webpack_require__.C(exports);
 var __webpack_exec__ = (moduleId) => (__webpack_require__(__webpack_require__.s = moduleId))
-var __webpack_exports__ = __webpack_require__.X(0, ["vendor-chunks/next@15.1.7_@opentelemetry+api@1.9.0_react-dom@19.0.0_react@19.0.0__react@19.0.0","vendor-chunks/@opentelemetry+api@1.9.0","vendor-chunks/formdata-node@4.4.1","vendor-chunks/@cerebras+cerebras_cloud_sdk@1.21.0","vendor-chunks/form-data-encoder@1.7.2","vendor-chunks/whatwg-url@5.0.0","vendor-chunks/agentkeepalive@4.6.0","vendor-chunks/tr46@0.0.3","vendor-chunks/web-streams-polyfill@4.0.0-beta.3","vendor-chunks/node-fetch@2.7.0","vendor-chunks/webidl-conversions@3.0.1","vendor-chunks/ms@2.1.3","vendor-chunks/humanize-ms@1.2.1","vendor-chunks/event-target-shim@5.0.1","vendor-chunks/abort-controller@3.0.0"], () => (__webpack_exec__("(rsc)/./node_modules/.pnpm/next@15.1.7_@opentelemetry+api@1.9.0_react-dom@19.0.0_react@19.0.0__react@19.0.0/node_modules/next/dist/build/webpack/loaders/next-app-loader/index.js?name=app%2Fapi%2Fgenerate%2Froute&page=%2Fapi%2Fgenerate%2Froute&appPaths=&pagePath=private-next-app-dir%2Fapi%2Fgenerate%2Froute.ts&appDir=%2Fhome%2Frunner%2Fworkspace%2Fsrc%2Fapp&pageExtensions=tsx&pageExtensions=ts&pageExtensions=jsx&pageExtensions=js&rootDir=%2Fhome%2Frunner%2Fworkspace&isDev=true&tsconfigPath=tsconfig.json&basePath=&assetPrefix=&nextConfigOutput=&preferredRegion=&middlewareConfig=e30%3D!")));
+var __webpack_exports__ = __webpack_require__.X(0, ["vendor-chunks/next@15.1.7_@opentelemetry+api@1.9.0_react-dom@19.0.0_react@19.0.0__react@19.0.0","vendor-chunks/@opentelemetry+api@1.9.0","vendor-chunks/@azure+openai@2.0.0"], () => (__webpack_exec__("(rsc)/./node_modules/.pnpm/next@15.1.7_@opentelemetry+api@1.9.0_react-dom@19.0.0_react@19.0.0__react@19.0.0/node_modules/next/dist/build/webpack/loaders/next-app-loader/index.js?name=app%2Fapi%2Fgenerate%2Froute&page=%2Fapi%2Fgenerate%2Froute&appPaths=&pagePath=private-next-app-dir%2Fapi%2Fgenerate%2Froute.ts&appDir=%2Fhome%2Frunner%2Fworkspace%2Fsrc%2Fapp&pageExtensions=tsx&pageExtensions=ts&pageExtensions=jsx&pageExtensions=js&rootDir=%2Fhome%2Frunner%2Fworkspace&isDev=true&tsconfigPath=tsconfig.json&basePath=&assetPrefix=&nextConfigOutput=&preferredRegion=&middlewareConfig=e30%3D!")));
 module.exports = __webpack_exports__;
 
 })();
