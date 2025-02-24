@@ -8,11 +8,11 @@ export function extractCodeAndExplanation(content: string): {
     return { code: '', explanation: '' };
   }
 
-  // Extract code block if present
+  // Extract code block and strip surrounding text
   const codeBlockMatch = content.match(/```(?:html|javascript|js|css)?\n?([\s\S]*?)```/);
   
   if (codeBlockMatch) {
-    // Use code block content
+    // Use only the code block content, removing any text before or after
     let code = codeBlockMatch[1].trim();
     
     // If it's a complete HTML document, return as is
