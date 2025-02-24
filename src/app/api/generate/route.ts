@@ -72,9 +72,10 @@ export async function POST(req: Request) {
     return NextResponse.json({ code: content });
   } catch (error) {
     console.error('API Error:', error);
+    const errorMessage = error instanceof Error ? error.message : 'Failed to generate code';
     return NextResponse.json(
-      { error: 'Failed to generate code' },
-      { status: 500 }
+      { error: errorMessage },
+      { status: error instanceof Error && 'status' in error ? (error.status as number) : 500 }
     );
   }
 }
