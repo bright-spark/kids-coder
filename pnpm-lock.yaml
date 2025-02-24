@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@cerebras/cerebras_cloud_sdk':
+        specifier: ^1.21.0
+        version: 1.21.0
       '@eslint/js':
         specifier: ^9.21.0
         version: 9.21.0
@@ -251,6 +254,9 @@ packages:
   '@babel/runtime@7.26.9':
     resolution: {integrity: sha512-aA63XwOkcl4xxQa3HjPMqOP6LiK0ZDv3mUPYEFXkpHbaFjtGggE1A61FjFzJnB+p7/oy2gA8E+rcBNl/zC1tMg==}
     engines: {node: '>=6.9.0'}
+
+  '@cerebras/cerebras_cloud_sdk@1.21.0':
+    resolution: {integrity: sha512-0reSKqBLGPgJUy2lXhHcqsssSeDaokoh0Ds8KugIMfC4FaMuxWlo1xvBa/xVp6e4/rzWKxbmE/WV0wM1AzcZPw==}
 
   '@date-fns/tz@1.2.0':
     resolution: {integrity: sha512-LBrd7MiJZ9McsOgxqWX7AaxrDjcFVjWH/tIKJd7pnR7McaslGYOP1QmmiBXdJH/H/yLCT+rcQ7FaPBUxRGUtrg==}
@@ -3079,6 +3085,18 @@ snapshots:
   '@babel/runtime@7.26.9':
     dependencies:
       regenerator-runtime: 0.14.1
+
+  '@cerebras/cerebras_cloud_sdk@1.21.0':
+    dependencies:
+      '@types/node': 18.19.76
+      '@types/node-fetch': 2.6.12
+      abort-controller: 3.0.0
+      agentkeepalive: 4.6.0
+      form-data-encoder: 1.7.2
+      formdata-node: 4.4.1
+      node-fetch: 2.7.0
+    transitivePeerDependencies:
+      - encoding
 
   '@date-fns/tz@1.2.0': {}
 

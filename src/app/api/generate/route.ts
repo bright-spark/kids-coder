@@ -1,8 +1,13 @@
 import { OpenAI } from 'openai';
 import { NextResponse } from 'next/server';
+import Cerebras from '@cerebras/cerebras_cloud_sdk';
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY
+});
+
+const cerebras = new Cerebras({
+  apiKey: process.env.CEREBRAS_API_KEY
 });
 
 const HTML_TEMPLATE = `<!DOCTYPE html>
@@ -44,9 +49,9 @@ ${HTML_TEMPLATE}
 
 export async function POST(req: Request) {
   try {
-    const { prompt, existingCode } = await req.json();
+    const { prompt, existingCode, model = 'openai' } = await req.json();
 
-    const messages: OpenAI.Chat.ChatCompletionMessageParam[] = [
+    const messages = [
       { role: "system", content: SYSTEM_PROMPT },
     ];
 
@@ -66,18 +71,34 @@ export async function POST(req: Request) {
       });
     }
 
-    const completion = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
-      messages,
-      temperature: 0.9,
-      max_tokens: 4096,
-    });
+    let content = '';
 
-    return NextResponse.json({ 
-      code: completion.choices[0].message.content || ''
-    });
+    if (model === 'cerebras') {
+      const stream = await cerebras.chat.completions.create({
+        messages,
+        model: 'llama3.1-8b',
+        stream: true,
+        max_completion_tokens: 4096,
+        temperature: 0.9,
+        top_p: 1
+      });
+
+      for await (const chunk of stream) {
+        content += chunk.choices[0]?.delta?.content || '';
+      }
+    } else {
+      const completion = await openai.chat.completions.create({
+        model: "gpt-4",
+        messages,
+        temperature: 0.9,
+        max_tokens: 4096,
+      });
+      content = completion.choices[0].message.content || '';
+    }
+
+    return NextResponse.json({ code: content });
   } catch (error) {
-    console.error('OpenAI API Error:', error);
+    console.error('API Error:', error);
     return NextResponse.json(
       { error: 'Failed to generate code' },
       { status: 500 }
