@@ -15,35 +15,45 @@ export function LivePreview({ code }: LivePreviewProps) {
   const iframeRef = useRef<HTMLIFrameElement>(null);
 
   useEffect(() => {
+    if (!code?.trim()) return;
+
     try {
-      const parser = new DOMParser();
-      const doc = parser.parseFromString(code, 'text/html');
-      const errors = Array.from(doc.querySelectorAll('parsererror'));
-
-      if (errors.length > 0) {
-        setError({
-          message: 'Invalid HTML structure',
-          type: 'error'
-        });
-        return;
-      }
-
-      // Update iframe content for live reload
       if (iframeRef.current) {
         const iframe = iframeRef.current;
         const iframeDoc = iframe.contentDocument || iframe.contentWindow?.document;
 
         if (iframeDoc) {
           iframeDoc.open();
-          iframeDoc.write(code);
+          
+          // If code contains HTML structure, use it directly
+          if (code.includes('<!DOCTYPE') || code.includes('<html') || code.includes('<body')) {
+            iframeDoc.write(code);
+          } else {
+            // For JavaScript or HTML fragments, wrap in proper HTML structure
+            const wrappedCode = `
+              <!DOCTYPE html>
+              <html>
+                <head>
+                  <meta charset="UTF-8">
+                  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                </head>
+                <body>
+                  ${code.includes('<') ? code : ''}
+                  ${!code.includes('<') ? `<script>${code}</script>` : ''}
+                </body>
+              </html>
+            `;
+            iframeDoc.write(wrappedCode);
+          }
+          
           iframeDoc.close();
         }
       }
 
       setError(null);
-    } catch {
+    } catch (err) {
       setError({
-        message: 'Failed to parse code',
+        message: err instanceof Error ? err.message : 'Failed to render preview',
         type: 'error'
       });
     }
