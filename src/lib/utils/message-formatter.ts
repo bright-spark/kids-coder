@@ -13,7 +13,7 @@ export function extractCodeAndExplanation(content: string): FormattedMessage {
 
   // Remove all code block markers and get clean code
   const cleanedContent = content
-    .replace(/```(?:html|javascript|js|css)?\s*/g, '')
+    .replace(/```(?:html|javascript|js|css|[a-zA-Z]*)?/g, '')
     .replace(/```/g, '')
     .trim();
 
