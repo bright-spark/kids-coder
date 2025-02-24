@@ -1,0 +1,82 @@
+./src/app/api/generate/route.ts
+47:11  Error: Unsafe assignment of an `any` value.  @typescript-eslint/no-unsafe-assignment
+56:70  Error: Invalid operand for a '+' operation. Operands must each be a number or string. Got `any`.  @typescript-eslint/restrict-plus-operands
+60:50  Error: Invalid type "any" of template literal expression.  @typescript-eslint/restrict-template-expressions
+65:9  Error: Unsafe assignment of an `any` value.  @typescript-eslint/no-unsafe-assignment
+
+./src/components/chat/chat-interface.tsx
+86:24  Error: Promise-returning function provided to attribute where a void return was expected.  @typescript-eslint/no-misused-promises
+89:30  Error: Returning a void expression from an arrow function shorthand is forbidden. Please add braces to the arrow function.  @typescript-eslint/no-confusing-void-expression
+119:27  Error: Unnecessary conditional, value is always truthy.  @typescript-eslint/no-unnecessary-condition
+
+./src/components/chat/starter-prompts.tsx
+39:28  Error: This assertion is unnecessary since it does not change the type of the expression.  @typescript-eslint/no-unnecessary-type-assertion
+50:28  Error: Returning a void expression from an arrow function shorthand is forbidden. Please add braces to the arrow function.  @typescript-eslint/no-confusing-void-expression
+
+./src/components/editor/code-editor.tsx
+101:21  Error: Promise-returning function provided to attribute where a void return was expected.  @typescript-eslint/no-misused-promises
+111:21  Error: Promise-returning function provided to attribute where a void return was expected.  @typescript-eslint/no-misused-promises
+125:32  Error: Returning a void expression from an arrow function shorthand is forbidden. Please add braces to the arrow function.  @typescript-eslint/no-confusing-void-expression
+
+./src/components/preview/live-preview.tsx
+44:14  Error: 'e' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/ui/carousel.tsx
+117:12  Error: Unnecessary optional chain on a non-nullish value.  @typescript-eslint/no-unnecessary-condition
+128:13  Error: Unnecessary conditional, value is always truthy.  @typescript-eslint/no-unnecessary-condition
+
+./src/components/ui/chart.tsx
+141:22  Error: Invalid type "NameType" of template literal expression.  @typescript-eslint/restrict-template-expressions
+145:20  Error: This assertion is unnecessary since it does not change the type of the expression.  @typescript-eslint/no-unnecessary-type-assertion
+145:49  Error: Unnecessary optional chain on a non-nullish value.  @typescript-eslint/no-unnecessary-condition
+188:28  Error: Invalid type "NameType" of template literal expression.  @typescript-eslint/restrict-template-expressions
+190:19  Error: Unsafe assignment of an `any` value.  @typescript-eslint/no-unsafe-assignment
+190:58  Error: Unsafe member access .fill on an `any` value.  @typescript-eslint/no-unsafe-member-access
+200:35  Error: Unnecessary optional chain on a non-nullish value.  @typescript-eslint/no-unnecessary-condition
+201:65  Error: Unsafe argument of type `any` assigned to a parameter of type `Payload<ValueType, NameType>[]`.  @typescript-eslint/no-unsafe-argument
+221:31  Error: Unsafe assignment of an `any` value.  @typescript-eslint/no-unsafe-assignment
+222:31  Error: Unsafe assignment of an `any` value.  @typescript-eslint/no-unsafe-assignment
+288:26  Error: Invalid type "DataKey<any>" of template literal expression.  @typescript-eslint/restrict-template-expressions
+293:20  Error: Unsafe assignment of an `any` value.  @typescript-eslint/no-unsafe-assignment
+354:14  Error: This assertion is unnecessary since it does not change the type of the expression.  @typescript-eslint/no-unnecessary-type-assertion
+
+./src/components/ui/command.tsx
+2:15  Error: 'DialogProps' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/ui/form.tsx
+49:7  Error: Unnecessary conditional, value is always falsy.  @typescript-eslint/no-unnecessary-condition
+117:14  Error: Template literal expression is unnecessary and can be simplified.  @typescript-eslint/no-unnecessary-template-expression
+149:36  Error: Unnecessary optional chain on a non-nullish value.  @typescript-eslint/no-unnecessary-condition
+
+./src/components/ui/progress.tsx
+20:42  Error: Invalid type "number" of template literal expression.  @typescript-eslint/restrict-template-expressions
+
+./src/hooks/use-toast.ts
+15:7  Error: 'actionTypes' is assigned a value but only used as a type.  @typescript-eslint/no-unused-vars
+143:5  Error: Returning a void expression from an arrow function shorthand is forbidden. Please add braces to the arrow function.  @typescript-eslint/no-confusing-void-expression
+147:25  Error: Returning a void expression from an arrow function shorthand is forbidden. Please add braces to the arrow function.  @typescript-eslint/no-confusing-void-expression
+184:36  Error: Returning a void expression from an arrow function shorthand is forbidden. Please add braces to the arrow function.  @typescript-eslint/no-confusing-void-expression
+
+./src/lib/services/openai.ts
+19:7  Error: 'SYSTEM_PROMPT' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+53:11  Error: Unsafe assignment of an `any` value.  @typescript-eslint/no-unsafe-assignment
+54:5  Error: Unsafe return of a value of type `any`.  @typescript-eslint/no-unsafe-return
+54:17  Error: Unsafe member access .code on an `any` value.  @typescript-eslint/no-unsafe-member-access
+78:11  Error: Unsafe assignment of an `any` value.  @typescript-eslint/no-unsafe-assignment
+79:5  Error: Unsafe return of a value of type `any`.  @typescript-eslint/no-unsafe-return
+79:17  Error: Unsafe member access .code on an `any` value.  @typescript-eslint/no-unsafe-member-access
+103:11  Error: Unsafe assignment of an `any` value.  @typescript-eslint/no-unsafe-assignment
+104:5  Error: Unsafe return of a value of type `any`.  @typescript-eslint/no-unsafe-return
+104:17  Error: Unsafe member access .code on an `any` value.  @typescript-eslint/no-unsafe-member-access
+
+./src/lib/store.ts
+35:5  Error: Returning a void expression from an arrow function shorthand is forbidden. Please add braces to the arrow function.  @typescript-eslint/no-confusing-void-expression
+45:34  Error: Returning a void expression from an arrow function shorthand is forbidden. Please add braces to the arrow function.  @typescript-eslint/no-confusing-void-expression
+46:38  Error: Returning a void expression from an arrow function shorthand is forbidden. Please add braces to the arrow function.  @typescript-eslint/no-confusing-void-expression
+48:5  Error: Returning a void expression from an arrow function shorthand is forbidden. Please add braces to the arrow function.  @typescript-eslint/no-confusing-void-expression
+52:5  Error: Returning a void expression from an arrow function shorthand is forbidden. Please add braces to the arrow function.  @typescript-eslint/no-confusing-void-expression
+67:5  Error: Returning a void expression from an arrow function shorthand is forbidden. Please add braces to the arrow function.  @typescript-eslint/no-confusing-void-expression
+78:5  Error: Returning a void expression from an arrow function shorthand is forbidden. Please add braces to the arrow function.  @typescript-eslint/no-confusing-void-expression
+
+info  - Need to disable some ESLint rules? Learn more here: https://nextjs.org/docs/app/api-reference/config/eslint#disabling-rules
+ ELIFECYCLE  Command failed with exit code 1.
