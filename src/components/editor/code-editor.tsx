@@ -6,6 +6,7 @@ import { useAppStore } from '@/lib/store';
 import { useToast } from '@/components/ui/use-toast';
 import { useState } from 'react';
 import { improveCode, debugCode } from '@/lib/services/openai';
+import { extractCodeAndExplanation } from '@/lib/utils/message-formatter';
 
 export function CodeEditor() {
   const { code, setCode, undo, redo, isProcessing, setProcessing } = useAppStore();
@@ -18,7 +19,8 @@ export function CodeEditor() {
     setProcessing(true);
     try {
       const improvedCode = await improveCode(code.current);
-      setCode(improvedCode);
+      const { code: formattedCode } = extractCodeAndExplanation(improvedCode);
+      setCode(formattedCode || improvedCode);
       toast({
         title: "Code Improved",
         description: "Your code has been enhanced with new features and optimizations",
