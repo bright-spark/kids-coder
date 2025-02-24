@@ -58,24 +58,49 @@ export async function POST(req: Request) {
       });
     
 
-    const stream = await client.streamChatCompletions(
-      process.env.AZURE_OPENAI_DEPLOYMENT_NAME!,
-      messages,
-      { maxTokens: 2048, temperature: 0.7 }
-    );
-
-    let content = '';
-    for await (const chunk of stream) {
-      content += chunk.choices[0]?.delta?.content || '';
+    if (!process.env.AZURE_OPENAI_DEPLOYMENT_NAME) {
+      throw new Error('AZURE_OPENAI_DEPLOYMENT_NAME is not configured');
     }
 
-    return NextResponse.json({ code: content });
+    try {
+      const stream = await client.streamChatCompletions(
+        process.env.AZURE_OPENAI_DEPLOYMENT_NAME,
+        messages,
+        { maxTokens: 2048, temperature: 0.7 }
+      );
+
+      let content = '';
+      for await (const chunk of stream) {
+        const delta = chunk.choices[0]?.delta?.content;
+        if (delta) content += delta;
+      }
+
+      if (!content) {
+        throw new Error('No content received from Azure OpenAI');
+      }
+
+      return NextResponse.json({ code: content });
+    } catch (error: any) {
+      console.error('Azure OpenAI Error:', {
+        name: error.name,
+        message: error.message,
+        status: error.status,
+        code: error.code
+      });
+      
+      return NextResponse.json(
+        { 
+          error: error.message || 'Failed to generate code',
+          code: error.code
+        },
+        { status: error.status || 500 }
+      );
+    }
   } catch (error) {
-    console.error('API Error:', error);
-    const errorMessage = error instanceof Error ? error.message : 'Failed to generate code';
+    console.error('Unexpected error:', error);
     return NextResponse.json(
-      { error: errorMessage },
-      { status: error instanceof Error && 'status' in error ? (error.status as number) : 500 }
+      { error: 'An unexpected error occurred' },
+      { status: 500 }
     );
   }
 }
