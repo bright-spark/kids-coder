@@ -41,7 +41,7 @@ export function LivePreview({ code }: LivePreviewProps) {
       }
 
       setError(null);
-    } catch (e) {
+    } catch {
       setError({
         message: 'Failed to parse code',
         type: 'error'
