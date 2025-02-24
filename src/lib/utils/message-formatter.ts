@@ -24,27 +24,19 @@ export function extractCodeAndExplanation(content: string): FormattedMessage {
 
   // Process the cleaned content
   if (cleanedContent) {
-    let codeWithComments = cleanedContent;
-    
-    // Add explanation as HTML comment if present
-    if (explanation) {
-      const commentBlock = `<!--\nExplanation:\n${explanation}\n-->\n`;
-      codeWithComments = commentBlock + codeWithComments;
-    }
-
-    // If it's a complete HTML document or standalone element, return with comments
+    // If it's a complete HTML document or standalone element
     if (cleanedContent.includes('<!DOCTYPE html') || 
         cleanedContent.includes('<html') ||
         (cleanedContent.trim().startsWith('<') && cleanedContent.trim().endsWith('>'))) {
       return {
-        code: codeWithComments,
+        code: cleanedContent,
         explanation
       };
     }
 
-    // Return the cleaned content with comments
+    // Return the cleaned content
     return {
-      code: codeWithComments,
+      code: cleanedContent,
       explanation
     };
   }
