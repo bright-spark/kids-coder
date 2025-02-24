@@ -19,7 +19,7 @@ export function LivePreview({ code }: LivePreviewProps) {
       const parser = new DOMParser();
       const doc = parser.parseFromString(code, 'text/html');
       const errors = Array.from(doc.querySelectorAll('parsererror'));
-      
+
       if (errors.length > 0) {
         setError({
           message: 'Invalid HTML structure',
@@ -32,7 +32,7 @@ export function LivePreview({ code }: LivePreviewProps) {
       if (iframeRef.current) {
         const iframe = iframeRef.current;
         const iframeDoc = iframe.contentDocument || iframe.contentWindow?.document;
-        
+
         if (iframeDoc) {
           iframeDoc.open();
           iframeDoc.write(code);

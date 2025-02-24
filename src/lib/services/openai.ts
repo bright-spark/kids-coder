@@ -1,4 +1,4 @@
-import OpenAI from 'openai';
+import { OpenAIStream } from 'ai';
 
 const HTML_TEMPLATE = `<!DOCTYPE html>
 <html lang="en">

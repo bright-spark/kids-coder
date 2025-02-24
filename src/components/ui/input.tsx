@@ -3,7 +3,11 @@ import * as React from 'react';
 import { cn } from '@/lib/utils';
 
 export interface InputProps
-  extends React.InputHTMLAttributes<HTMLInputElement> {}
+  extends React.InputHTMLAttributes<HTMLInputElement> {
+  type?: string;
+  value?: string | number;
+  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
+}
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
   ({ className, type, ...props }, ref) => {

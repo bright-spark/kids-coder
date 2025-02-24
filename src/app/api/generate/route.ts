@@ -1,4 +1,3 @@
-
 import { OpenAI } from 'openai';
 import { NextResponse } from 'next/server';
 
@@ -46,8 +45,8 @@ ${HTML_TEMPLATE}
 export async function POST(req: Request) {
   try {
     const { prompt, existingCode } = await req.json();
-    
-    const messages: any[] = [
+
+    const messages: unknown[] = [
       { role: "system", content: SYSTEM_PROMPT },
     ];
 
