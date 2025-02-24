@@ -101,10 +101,30 @@ export async function POST(req: Request) {
       
       console.error('Azure OpenAI Error Details:', errorDetails);
       
+      // Check for specific Azure OpenAI errors
+      if (error.code === 'ResourceNotFound') {
+        return NextResponse.json(
+          { error: 'Azure OpenAI deployment not found. Please check AZURE_OPENAI_DEPLOYMENT_NAME.' },
+          { status: 404 }
+        );
+      }
+      
+      if (error.code === 'InvalidAuthentication') {
+        return NextResponse.json(
+          { error: 'Invalid Azure OpenAI credentials. Please check AZURE_OPENAI_KEY.' },
+          { status: 401 }
+        );
+      }
+
       return NextResponse.json(
         { 
           error: error.message || 'Failed to generate code',
-          details: errorDetails
+          details: {
+            ...errorDetails,
+            code: error.code,
+            type: error.type,
+            request: error.request
+          }
         },
         { status: error.status || 500 }
       );
