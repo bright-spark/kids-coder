@@ -37,7 +37,6 @@ ${HTML_TEMPLATE}
 - ALWAYS return complete, runnable HTML files with embedded CSS/JS.
 - NEVER include external libraries besides for Tailwind.
 - NEVER include any explanatory text before or after the code.
-- NEVER include opening or closing backtick code like \`\`\`html and \`\`\` or any other language delimeters at all.
 - NEVER include any text before or after the code.
 - ONLY return the HTML code, nothing else.
 - REMEMBER when given existing code, maintain its core concepts and theme while making dynamic improvements`;
@@ -69,11 +68,8 @@ export async function POST(req: Request) {
     const completion = await openai.chat.completions.create({
       model: "gpt-4",
       messages,
-      temperature: 0.7,
-      max_tokens: 2048,
-      frequency_penalty: 0.2,
-      presence_penalty: 0.3,
-      timeout: 30000
+      temperature: 0.9,
+      max_tokens: 4096,
     });
 
     return NextResponse.json({ 

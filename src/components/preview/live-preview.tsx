@@ -1,15 +1,9 @@
-
-import { useEffect, useRef, useState } from 'react';
 import { Card } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { AlertTriangle } from 'lucide-react';
-import { Loader2 } from 'lucide-react';
+import { AlertTriangle, Loader2 } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
+import { CodeError } from '@/lib/types';
 import { useAppStore } from '@/lib/store';
-
-interface CodeError {
-  message: string;
-  type: string;
-}
 
 interface LivePreviewProps {
   code: string;
@@ -34,6 +28,7 @@ export function LivePreview({ code }: LivePreviewProps) {
         return;
       }
 
+      // Update iframe content for live reload
       if (iframeRef.current) {
         const iframe = iframeRef.current;
         const iframeDoc = iframe.contentDocument || iframe.contentWindow?.document;
@@ -46,7 +41,7 @@ export function LivePreview({ code }: LivePreviewProps) {
       }
 
       setError(null);
-    } catch (err) {
+    } catch {
       setError({
         message: 'Failed to parse code',
         type: 'error'
@@ -79,8 +74,8 @@ export function LivePreview({ code }: LivePreviewProps) {
           ref={iframeRef}
           title="preview"
           className="w-full h-full rounded-lg bg-white"
-          sandbox="allow-scripts allow-forms allow-same-origin allow-modals allow-popups allow-presentation allow-downloads allow-pointer-lock allow-top-navigation"
-          onError={(e) => {
+          sandbox="allow-scripts allow-forms allow-same-origin allow-modals allow-popups allow-presentation"
+          onError={(_e) => {
             setError({
               message: 'Failed to render preview',
               type: 'error'
