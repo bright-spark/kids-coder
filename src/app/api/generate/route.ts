@@ -46,7 +46,7 @@ export async function POST(req: Request) {
   try {
     const { prompt, existingCode } = await req.json();
 
-    const messages: unknown[] = [
+    const messages: OpenAI.Chat.ChatCompletionMessageParam[] = [
       { role: "system", content: SYSTEM_PROMPT },
     ];
 
@@ -67,7 +67,7 @@ export async function POST(req: Request) {
     }
 
     const completion = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
+      model: "gpt-4",
       messages,
       temperature: 0.9,
       max_tokens: 4096,
