@@ -19,13 +19,14 @@ export default [
         project: './tsconfig.json'
       }
     },
-    extends: [
-      'plugin:@next/next/recommended',
-      'plugin:@next/next/core-web-vitals'
-    ],
+    settings: {
+      next: {
+        rootDir: '.'
+      }
+    },
     rules: {
-      '@next/next/no-html-link-for-pages': 'error',
-      '@next/next/no-img-element': 'error',
+      ...nextPlugin.configs.recommended.rules,
+      ...nextPlugin.configs['core-web-vitals'].rules,
       '@typescript-eslint/no-unsafe-assignment': 'off',
       '@typescript-eslint/no-unsafe-member-access': 'off',
       '@typescript-eslint/no-unsafe-return': 'off',
