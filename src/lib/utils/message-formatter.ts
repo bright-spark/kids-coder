@@ -9,10 +9,11 @@ export function extractCodeAndExplanation(content: string): {
   }
 
   // Extract code block and strip surrounding text
-  const codeBlockMatch = content.match(/```(?:html|javascript|js|css)?\n?([\s\S]*?)```/);
+  const codeBlockRegex = /```(?:html|javascript|js|css)?\s*([\s\S]*?)\s*```/;
+  const codeBlockMatch = content.match(codeBlockRegex);
   
   if (codeBlockMatch) {
-    // Use only the code block content, removing any text before or after
+    // Extract only the code content between the backticks
     let code = codeBlockMatch[1].trim();
     
     // If it's a complete HTML document, return as is
