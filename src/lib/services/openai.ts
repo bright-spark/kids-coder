@@ -9,32 +9,34 @@ interface GenerateResponse {
 const MAX_RETRIES = 3;
 const RETRY_DELAY = 1000;
 
-export async function generateCode(prompt: string, existingCode?: string): Promise<GenerateResponse> {
+export async function generateCode(prompt: string, existingCode?: string): Promise<string> {
   let attempts = 0;
   while (attempts < MAX_RETRIES) {
     try {
       const response = await fetch('/api/generate', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ prompt, existingCode }),
-    });
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ prompt, existingCode }),
+      });
 
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.error || 'Failed to generate code');
-    }
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to generate code');
+      }
 
-    const data = await response.json();
-    return data.code;
-  } catch (error) {
-    attempts++;
-    if (attempts === MAX_RETRIES) {
-      throw new Error(error instanceof Error ? error.message : 'Failed to generate code');
+      const data = await response.json();
+      return data.code;
+    } catch (error) {
+      attempts++;
+      if (attempts === MAX_RETRIES) {
+        throw new Error(error instanceof Error ? error.message : 'Failed to generate code');
+      }
+      await new Promise(resolve => setTimeout(resolve, RETRY_DELAY));
     }
-    await new Promise(resolve => setTimeout(resolve, RETRY_DELAY));
   }
+  throw new Error('Failed to generate code after retries');
 }
 
 export async function improveCode(code: string): Promise<string> {
