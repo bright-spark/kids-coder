@@ -1,11 +1,9 @@
+import { OpenAI } from 'openai';
 import { NextResponse } from 'next/server';
-import { OpenAIClient, AzureKeyCredential } from '@azure/openai';
 
-const client = new OpenAIClient(
-  process.env.AZURE_OPENAI_ENDPOINT!,
-  new AzureKeyCredential(process.env.AZURE_OPENAI_KEY!),
-  { apiVersion: '2024-08-01-preview' }
-);
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY
+});
 
 const HTML_TEMPLATE = `<!DOCTYPE html>
 <html lang="en">
@@ -29,110 +27,59 @@ const SYSTEM_PROMPT = `You are an expert AI coding tutor for kids. Generate ente
 Rules:
 - ALWAYS use this exact HTML template structure:
 ${HTML_TEMPLATE}
-- ALWAYS Keep code simple yet interesting and educational
-- ALWAYS Use Tailwind for CSS styling from a popular fast CDN
-- ALWAYS use only vanilla JavaScript 
-- ALWAYS Include helpful comments explaining key concepts
-- ALWAYS focus on good visual and interactive elements
-- ALWAYS ensure code is safe and appropriate for children
-- ALWAYS use images from Unsplash for image sources in code
-- ALWAYS return complete, runnable HTML files with embedded CSS/JS
-- NEVER include external libraries besides for Tailwind
-- NEVER include any explanatory text before or after the code
-- NEVER include opening or closing backtick code / language delimeters at all 
-- ONLY return the HTML code, nothing else
-- REMEMBER when given existing code, maintain its core concepts and theme while making improvements`;
+- ALWAYS Keep code simple yet interesting and educational.
+- ALWAYS Use Tailwind for CSS styling from a popular fast CDN.
+- ALWAYS use only vanilla JavaScript.
+- ALWAYS Include helpful comments explaining key concepts.
+- ALWAYS focus on good visual and interactive elements.
+- ALWAYS ensure code is safe and appropriate for children.
+- ALWAYS use emojis instead of images for image sources in code.
+- ALWAYS return complete, runnable HTML files with embedded CSS/JS.
+- NEVER include external libraries besides for Tailwind.
+- NEVER include any explanatory text before or after the code.
+- NEVER include opening or closing backtick code like \`\`\`html and \`\`\` or any other language delimeters at all.
+- NEVER include any text before or after the code.
+- ONLY return the HTML code, nothing else.
+- REMEMBER when given existing code, maintain its core concepts and theme while making dynamic improvements`;
 
 export async function POST(req: Request) {
   try {
-    const { prompt } = await req.json();
+    const { prompt, existingCode } = await req.json();
 
-    const messages = [
+    const messages: OpenAI.Chat.ChatCompletionMessageParam[] = [
       { role: "system", content: SYSTEM_PROMPT },
     ];
 
-
-    messages.push({
-        role: "user",
-        content: prompt,
+    if (existingCode) {
+      messages.push({
+        role: "assistant",
+        content: "Here's the current code we're working with:\n\n" + existingCode
       });
-    
-
-    if (!process.env.AZURE_OPENAI_DEPLOYMENT_NAME) {
-      throw new Error('AZURE_OPENAI_DEPLOYMENT_NAME is not configured');
+      messages.push({
+        role: "user",
+        content: `Based on this existing code, ${prompt}`
+      });
+    } else {
+      messages.push({
+        role: "user",
+        content: prompt
+      });
     }
 
-    try {
-      if (!process.env.AZURE_OPENAI_KEY || !process.env.AZURE_OPENAI_ENDPOINT) {
-        throw new Error('Azure OpenAI credentials not configured');
-      }
+    const completion = await openai.chat.completions.create({
+      model: "gpt-4",
+      messages,
+      temperature: 0.9,
+      max_tokens: 4096,
+    });
 
-      const stream = await client.streamChatCompletions(
-        process.env.AZURE_OPENAI_DEPLOYMENT_NAME,
-        messages,
-        { maxTokens: 2048, temperature: 0.7 }
-      );
-
-      let content = '';
-      try {
-        for await (const chunk of stream) {
-          const delta = chunk.choices[0]?.delta?.content;
-          if (delta) content += delta;
-        }
-      } catch (streamError: any) {
-        console.error('Stream Error:', streamError);
-        throw new Error(`Stream error: ${streamError.message}`);
-      }
-
-      if (!content) {
-        throw new Error('No content received from Azure OpenAI');
-      }
-
-      return NextResponse.json({ code: content });
-    } catch (error: any) {
-      const errorDetails = {
-        name: error.name,
-        message: error.message,
-        status: error.status,
-        code: error.code,
-        type: error.type,
-        stack: error.stack
-      };
-      
-      console.error('Azure OpenAI Error Details:', errorDetails);
-      
-      // Check for specific Azure OpenAI errors
-      if (error.code === 'ResourceNotFound') {
-        return NextResponse.json(
-          { error: 'Azure OpenAI deployment not found. Please check AZURE_OPENAI_DEPLOYMENT_NAME.' },
-          { status: 404 }
-        );
-      }
-      
-      if (error.code === 'InvalidAuthentication') {
-        return NextResponse.json(
-          { error: 'Invalid Azure OpenAI credentials. Please check AZURE_OPENAI_KEY.' },
-          { status: 401 }
-        );
-      }
-
-      return NextResponse.json(
-        { 
-          error: error.message || 'Failed to generate code',
-          details: {
-            ...errorDetails,
-            code: error.code,
-            type: error.type,
-            request: error.request
-          }
-        },
-        { status: error.status || 500 }
-      );
-    }
+    return NextResponse.json({ 
+      code: completion.choices[0].message.content || ''
+    });
   } catch (error) {
-    console.error('Unexpected error:', error);
+    console.error('OpenAI API Error:', error);
     return NextResponse.json(
-      { error: 'An unexpected error occurred' },
+      { error: 'Failed to generate code' },
       { status: 500 }
     );
   }
