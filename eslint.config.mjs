@@ -14,7 +14,14 @@ export default [
       '@next/next': nextPlugin,
       'react-hooks': reactHooks,
     },
+    languageOptions: {
+      parserOptions: {
+        project: './tsconfig.json'
+      }
+    },
     rules: {
+      '@next/next/no-html-link-for-pages': 'error',
+      '@next/next/no-img-element': 'error',
       '@typescript-eslint/no-unsafe-assignment': 'off',
       '@typescript-eslint/no-unsafe-member-access': 'off',
       '@typescript-eslint/no-unsafe-return': 'off',
