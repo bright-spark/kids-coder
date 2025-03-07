@@ -1,19 +1,32 @@
+import { AzureKeyCredential, OpenAIClient } from "@azure/openai";
+
+// Create Azure OpenAI client
+const endpoint = process.env.AZURE_OPENAI_ENDPOINT || '';
+const apiKey = process.env.AZURE_OPENAI_API_KEY || '';
+const deploymentName = process.env.AZURE_OPENAI_DEPLOYMENT_NAME || '';
+
+// Initialize the Azure OpenAI client
+const client = new OpenAIClient(endpoint, new AzureKeyCredential(apiKey));
+
+
 export async function generateCode(prompt: string, existingCode?: string): Promise<string> {
   try {
-    const response = await fetch('/api/generate', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ prompt, existingCode }),
-    });
+    const messages = [
+      { role: "system", content: "You are a helpful coding assistant." },
+      { role: "user", content: `Generate code based on the following prompt: ${prompt}  Existing code: ${existingCode || ""}` },
+    ];
 
-    if (!response.ok) {
-      throw new Error('Failed to generate code');
-    }
+    const result = await client.getChatCompletions(
+      deploymentName,
+      messages,
+      {
+        temperature: 0.7,
+        maxTokens: 2048,
+        n: 1
+      }
+    );
 
-    const data = await response.json();
-    return data.code;
+    return result.choices[0].message?.content || '';
   } catch (error) {
     console.error('API Error:', error);
     throw new Error('Failed to generate code. Please try again.');
@@ -22,23 +35,22 @@ export async function generateCode(prompt: string, existingCode?: string): Promi
 
 export async function improveCode(code: string): Promise<string> {
   try {
-    const response = await fetch('/api/generate', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        prompt: 'Improve this code while maintaining its core functionality',
-        existingCode: code
-      }),
-    });
+    const messages = [
+      { role: "system", content: "You are a helpful coding assistant." },
+      { role: "user", content: `Improve this code while maintaining its core functionality: ${code}` },
+    ];
 
-    if (!response.ok) {
-      throw new Error('Failed to improve code');
-    }
+    const result = await client.getChatCompletions(
+      deploymentName,
+      messages,
+      {
+        temperature: 0.7,
+        maxTokens: 2048,
+        n: 1
+      }
+    );
 
-    const data = await response.json();
-    return data.code;
+    return result.choices[0].message?.content || '';
   } catch (error) {
     console.error('API Error:', error);
     throw new Error('Failed to improve code. Please try again.');
@@ -47,23 +59,22 @@ export async function improveCode(code: string): Promise<string> {
 
 export async function debugCode(code: string): Promise<string> {
   try {
-    const response = await fetch('/api/generate', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        prompt: 'Debug and optimize this code while maintaining its core functionality',
-        existingCode: code
-      }),
-    });
+    const messages = [
+      { role: "system", content: "You are a helpful coding assistant." },
+      { role: "user", content: `Debug and optimize this code while maintaining its core functionality: ${code}` },
+    ];
 
-    if (!response.ok) {
-      throw new Error('Failed to debug code');
-    }
+    const result = await client.getChatCompletions(
+      deploymentName,
+      messages,
+      {
+        temperature: 0.7,
+        maxTokens: 2048,
+        n: 1
+      }
+    );
 
-    const data = await response.json();
-    return data.code;
+    return result.choices[0].message?.content || '';
   } catch (error) {
     console.error('API Error:', error);
     throw new Error('Failed to debug code. Please try again.');

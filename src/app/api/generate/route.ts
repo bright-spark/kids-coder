@@ -1,9 +1,19 @@
-import { OpenAI } from 'openai';
+import { AzureKeyCredential, OpenAIClient } from "@azure/openai";
 import { NextResponse } from 'next/server';
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY
-});
+// Create Azure OpenAI client
+const endpoint = process.env.AZURE_OPENAI_ENDPOINT || '';
+const apiKey = process.env.AZURE_OPENAI_API_KEY || '';
+const deploymentName = process.env.AZURE_OPENAI_DEPLOYMENT_NAME || '';
+
+// Initialize the Azure OpenAI client
+const client = new OpenAIClient(endpoint, new AzureKeyCredential(apiKey));
+
+// Ensure we're listening on all interfaces in production
+export const config = {
+  runtime: 'edge',
+  regions: ['iad1']
+};
 
 const HTML_TEMPLATE = `<!DOCTYPE html>
 <html lang="en">
@@ -51,7 +61,7 @@ export async function POST(req: Request) {
   try {
     const { prompt, existingCode } = await req.json();
 
-    const messages: OpenAI.Chat.ChatCompletionMessageParam[] = [
+    const messages = [
       { role: "system", content: SYSTEM_PROMPT },
     ];
 
@@ -71,20 +81,22 @@ export async function POST(req: Request) {
       });
     }
 
-    const completion = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
+    // Azure OpenAI request
+    const result = await client.getChatCompletions(
+      deploymentName,
       messages,
-      temperature: 0.7,  // Adjust temperature for creativity
-      max_tokens: 2048,  // Adjust tokens for optimal response length
-      n: 1,              // Generate one completion
-      stop: null         // Allow completion to determine stop
-    });
+      {
+        temperature: 0.7,
+        maxTokens: 2048,
+        n: 1
+      }
+    );
 
     return NextResponse.json({ 
-      code: completion.choices[0].message.content || ''
+      code: result.choices[0].message?.content || ''
     });
   } catch (error) {
-    console.error('OpenAI API Error:', error);
+    console.error('Azure OpenAI API Error:', error);
     return NextResponse.json(
       { error: 'Failed to generate code' },
       { status: 500 }
