@@ -65,4 +65,49 @@ export class AzureGPTService {
       throw error;
     }
   }
+
+  // Add these utility functions that are referenced in other components
+  async generateCode(prompt: string, existingCode?: string): Promise<string> {
+    const messages: Message[] = [];
+    
+    if (existingCode) {
+      messages.push({
+        role: 'assistant',
+        content: `Here's the current code:\n\n${existingCode}`
+      });
+      messages.push({
+        role: 'user',
+        content: `Based on this code, ${prompt}`
+      });
+    } else {
+      messages.push({
+        role: 'user',
+        content: prompt
+      });
+    }
+    
+    return this.chat(messages);
+  }
+  
+  async improveCode(code: string, prompt: string): Promise<string> {
+    const messages: Message[] = [
+      {
+        role: 'user',
+        content: `Improve this code:\n\n${code}\n\nSpecifically: ${prompt}`
+      }
+    ];
+    
+    return this.chat(messages);
+  }
+  
+  async debugCode(code: string, error: string): Promise<string> {
+    const messages: Message[] = [
+      {
+        role: 'user',
+        content: `Debug this code:\n\n${code}\n\nError: ${error}`
+      }
+    ];
+    
+    return this.chat(messages);
+  }
 }
