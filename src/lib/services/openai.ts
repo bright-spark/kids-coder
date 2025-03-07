@@ -101,7 +101,9 @@ export async function generateCode(prompt: string, existingCode?: string): Promi
 
     const systemPrompt = "You are an expert in HTML, CSS, and JavaScript. Generate complete, working code based on the user's request.";
 
-    return await azureGptService.chat(messages, systemPrompt);
+    // Create a new instance for this function call
+    const service = new AzureGPTService();
+    return await service.chat(messages, systemPrompt);
   } catch (error) {
     console.error('Error in code generation:', error);
     throw error;
@@ -114,7 +116,9 @@ export async function improveCode(code: string): Promise<string> {
       { role: 'user', content: `Improve this code while maintaining its core functionality: ${code}` }
     ];
 
-    return await azureGptService.chat(messages, "You are a helpful coding assistant.");
+    // Create a new instance for this function call
+    const service = new AzureGPTService();
+    return await service.chat(messages, "You are a helpful coding assistant.");
   } catch (error) {
     console.error('API Error:', error);
     throw new Error('Failed to improve code. Please try again.');
@@ -127,7 +131,9 @@ export async function debugCode(code: string): Promise<string> {
       { role: 'user', content: `Debug and optimize this code while maintaining its core functionality: ${code}` }
     ];
 
-    return await azureGptService.chat(messages, "You are a helpful coding assistant.");
+    // Create a new instance for this function call
+    const service = new AzureGPTService();
+    return await service.chat(messages, "You are a helpful coding assistant.");
   } catch (error) {
     console.error('API Error:', error);
     throw new Error('Failed to debug code. Please try again.');
