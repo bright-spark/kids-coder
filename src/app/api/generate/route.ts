@@ -61,6 +61,14 @@ ${HTML_TEMPLATE}
 
 export async function POST(req: Request) {
   try {
+    // Debug environment variables at API route level
+    console.log("API Route - Environment variables check:", {
+      AZURE_OPENAI_API_KEY_exists: !!process.env.AZURE_OPENAI_API_KEY,
+      AZURE_OPENAI_ENDPOINT_exists: !!process.env.AZURE_OPENAI_ENDPOINT,
+      AZURE_OPENAI_DEPLOYMENT_NAME_exists: !!process.env.AZURE_OPENAI_DEPLOYMENT_NAME,
+      AZURE_OPENAI_VERSION_exists: !!process.env.AZURE_OPENAI_VERSION
+    });
+    
     const { prompt, existingCode } = await req.json();
 
     const messages: Message[] = [
