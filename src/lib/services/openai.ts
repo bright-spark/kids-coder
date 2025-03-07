@@ -10,7 +10,7 @@ export class AzureGPTService {
   private apiVersion: string;
 
   constructor(
-    apiKey: string = process.env.AZURE_OPENAI_KEY || '',
+    apiKey: string = process.env.AZURE_OPENAI_API_KEY || '',
     endpoint: string = process.env.AZURE_OPENAI_ENDPOINT || '',
     deploymentName: string = process.env.AZURE_OPENAI_DEPLOYMENT_NAME || '',
     apiVersion: string = process.env.AZURE_OPENAI_VERSION || "2023-05-15"
