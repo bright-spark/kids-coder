@@ -3,7 +3,7 @@ export async function generateCode(prompt: string, _existingCode?: string): Prom
     if (!prompt || prompt.trim() === '') {
       throw new Error('Prompt cannot be empty');
     }
-    
+
     // Enhance prompt when existing code is provided to maintain context
     const enhancedPrompt = _existingCode 
       ? `${prompt}\n\nPlease maintain consistency with the existing code context provided. Keep the same style, naming conventions, and structure when appropriate.`
@@ -21,7 +21,7 @@ export async function generateCode(prompt: string, _existingCode?: string): Prom
         },
         body: JSON.stringify({ 
           prompt: enhancedPrompt, 
-          _existingCode,
+          existingCode: _existingCode,
           preserveContext: !!_existingCode,
           codeLanguage: _existingCode ? detectLanguage(_existingCode) : 'html'
         }),
@@ -77,7 +77,7 @@ export async function generateCode(prompt: string, _existingCode?: string): Prom
         },
         body: JSON.stringify({ 
           prompt: enhancedPrompt, 
-          _existingCode,
+          existingCode: _existingCode,
           preserveContext: !!_existingCode,
           codeLanguage: _existingCode ? detectLanguage(_existingCode) : 'html'
         }),
@@ -131,7 +131,7 @@ async function processCodeWithAI(
       },
       body: JSON.stringify({
         prompt,
-        _existingCode: code,
+        existingCode: code,
         preserveContext: true,
         codeLanguage: detectLanguage(code)
       }),
@@ -164,7 +164,7 @@ async function processCodeWithAI(
         },
         body: JSON.stringify({
           prompt,
-          _existingCode: code,
+          existingCode: code,
           preserveContext: true,
           codeLanguage: detectLanguage(code)
         }),
@@ -177,11 +177,11 @@ async function processCodeWithAI(
       }
 
       const fallbackData = await fallbackResponse.json();
-      
+
       if (!fallbackData.code) {
         throw new Error(`No code was returned from the fallback API for ${operationName.toLowerCase()} operation`);
       }
-      
+
       return fallbackData.code;
     } catch (fallbackError) {
       console.error(`Fallback API call failed for ${operationName.toLowerCase()}:`, fallbackError);
@@ -209,7 +209,7 @@ export async function improveCode(code: string): Promise<string> {
  */
 function detectLanguage(code: string): string {
   if (!code) return 'html';
-  
+
   // Simple language detection based on patterns
   if (code.includes('<!DOCTYPE html>') || (code.includes('<html') && code.includes('</html>'))) {
     return 'html';
@@ -224,7 +224,7 @@ function detectLanguage(code: string): string {
   } else if (code.includes('console.log')) {
     return 'javascript';
   }
-  
+
   // Default to HTML for code editor
   return 'html';
 }
