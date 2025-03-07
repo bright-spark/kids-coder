@@ -120,7 +120,13 @@ export async function POST(req: Request) {
       // Extract code from markdown code blocks if present
       let cleanedCode = generatedCode;
       const codeBlockRegex = /```(?:\w+)?\s*([\s\S]*?)```/g;
-      const matches = [...generatedCode.matchAll(codeBlockRegex)];
+
+      // Alternative approach without using matchAll
+      const matches = [];
+      let match;
+      while ((match = codeBlockRegex.exec(generatedCode)) !== null) {
+        matches.push(match);
+      }
 
       if (matches.length > 0) {
         // Use the first code block if found
