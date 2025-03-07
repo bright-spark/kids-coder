@@ -5,7 +5,7 @@ import { NextResponse } from 'next/server';
 const client = new AzureOpenAI ({
   apiKey: process.env.AZURE_OPENAI_API_KEY || '',
   endpoint: process.env.AZURE_OPENAI_ENDPOINT || '',
-  apiVersion: '2023-05-15' // Use the appropriate API version
+  apiVersion: process.env.AZURE_OPENAI_VERSION || '2023-05-15' // Use environment variable or fallback
 });
 
 const HTML_TEMPLATE = `<!DOCTYPE html>
