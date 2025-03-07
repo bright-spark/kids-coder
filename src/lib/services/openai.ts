@@ -16,7 +16,7 @@ export class AzureGPTService {
     apiVersion?: string
   ) {
     // These will only be accessible server-side
-    this.apiKey = apiKey || process.env.AZURE_OPENAI_API_KEY || '';
+    this.apiKey = apiKey || process.env.AZURE_OPENAI_KEY || '';
     this.endpoint = endpoint || process.env.AZURE_OPENAI_ENDPOINT || '';
     this.deploymentName = deploymentName || process.env.AZURE_OPENAI_DEPLOYMENT_NAME || '';
     this.apiVersion = apiVersion || process.env.AZURE_OPENAI_VERSION || "2023-05-15";
