@@ -14,10 +14,17 @@ export async function generateCode(prompt: string, existingCode?: string): Promi
       body: JSON.stringify({ prompt, existingCode }),
     });
 
-    const data = await response.json();
+    let data;
+    try {
+      data = await response.json();
+    } catch (jsonError) {
+      console.error('Failed to parse response as JSON:', jsonError);
+      console.log('Response status:', response.status);
+      throw new Error(`Invalid response from server (${response.status}). The server might be down or returning HTML instead of JSON.`);
+    }
 
     if (!response.ok) {
-      const errorMessage = data.error || 'Failed to generate code';
+      const errorMessage = data?.error || 'Failed to generate code';
       console.error('API Error Response:', errorMessage);
       throw new Error(errorMessage);
     }

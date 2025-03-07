@@ -99,28 +99,38 @@ export async function POST(req: Request) {
     const deploymentName = process.env.AZURE_OPENAI_DEPLOYMENT_NAME || 'gpt-4o-mini';
 
     console.log(`Using deployment: ${deploymentName}`);
-
-    const completion = await client.getChatCompletions(
-      deploymentName,
-      messages,
-      {
-        temperature: 0.7,
-        maxTokens: 2048,
-        n: 1
-      }
-    );
+    console.log('API endpoint:', endpoint);
+    console.log('API key configured:', apiKey ? 'Yes (key hidden)' : 'No');
+    
+    try {
+      const completion = await client.getChatCompletions(
+        deploymentName,
+        messages,
+        {
+          temperature: 0.7,
+          maxTokens: 2048,
+          n: 1
+        }
+      );
 
     if (!completion || !completion.choices || completion.choices.length === 0) {
-      throw new Error('No completion generated from Azure OpenAI API');
-    }
+        throw new Error('No completion generated from Azure OpenAI API');
+      }
 
-    const generatedCode = completion.choices[0].message?.content || '';
-    
-    if (!generatedCode) {
-      throw new Error('Empty response from Azure OpenAI API');
-    }
+      const generatedCode = completion.choices[0].message?.content || '';
+      
+      if (!generatedCode) {
+        throw new Error('Empty response from Azure OpenAI API');
+      }
 
-    return NextResponse.json({ code: generatedCode });
+      return NextResponse.json({ code: generatedCode });
+    } catch (apiError) {
+      console.error('Error calling Azure OpenAI API:', apiError);
+      return NextResponse.json(
+        { error: 'Failed to call Azure OpenAI API: ' + (apiError instanceof Error ? apiError.message : String(apiError)) },
+        { status: 500 }
+      );
+    }
   } catch (error) {
     console.error('Azure OpenAI API Error:', error instanceof Error ? error.message : String(error));
     return NextResponse.json(
