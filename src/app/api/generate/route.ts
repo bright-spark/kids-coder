@@ -83,31 +83,23 @@ export async function POST(req: Request) {
       });
     }
 
-    // Azure OpenAI request
-    const response = await fetch(
-      `${endpoint}/openai/deployments/${deploymentName}/chat/completions?api-version=${apiVersion}`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'api-key': apiKey,
-        },
-        body: JSON.stringify({
-          messages: messages,
-          temperature: 0.7,
-          max_tokens: 2048,
-          n: 1,
-          stream: false
-        }),
-      }
-    );
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(`Azure API Error: ${response.status} - ${JSON.stringify(errorData)}`);
-    }
-
-    const data = await response.json();
+    // Import the Azure OpenAI service
+    const { AzureGPTService } = await import('@/lib/services/openai');
+    
+    // Create a new instance for this API route
+    const azureService = new AzureGPTService();
+    
+    // Get the response from Azure OpenAI
+    const content = await azureService.chat(messages, SYSTEM_PROMPT);
+    
+    // Mock data structure to match the expected format
+    const data = { 
+      choices: [{ 
+        message: { 
+          content 
+        } 
+      }] 
+    };
 
     return NextResponse.json({ 
       code: data.choices[0].message?.content || ''

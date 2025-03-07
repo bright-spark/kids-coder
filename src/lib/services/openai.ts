@@ -10,9 +10,9 @@ export class AzureGPTService {
   private apiVersion: string;
 
   constructor(
-    apiKey: string,
-    endpoint: string,
-    deploymentName: string,
+    apiKey: string = process.env.AZURE_OPENAI_API_KEY || '',
+    endpoint: string = process.env.AZURE_OPENAI_ENDPOINT || '',
+    deploymentName: string = process.env.AZURE_OPENAI_DEPLOYMENT_NAME || '',
     apiVersion: string = process.env.AZURE_OPENAI_VERSION || "2023-05-15"
   ) {
     if (!apiKey || !endpoint) {
@@ -23,6 +23,13 @@ export class AzureGPTService {
     this.endpoint = endpoint;
     this.deploymentName = deploymentName;
     this.apiVersion = apiVersion;
+
+    console.log("AzureGPTService initialized with:", {
+      endpointProvided: !!endpoint,
+      apiKeyProvided: !!apiKey,
+      deploymentNameProvided: !!deploymentName,
+      apiVersionProvided: !!apiVersion
+    });
   }
 
   async chat(
@@ -43,9 +50,12 @@ export class AzureGPTService {
               { role: 'system', content: systemPrompt },
               ...messages
             ],
-            max_tokens: 2048,
-            temperature: 0.7,
-            n: 1,
+            max_tokens: 800,  
+            temperature: 0.7,  
+            top_p: 0.9,  
+            frequency_penalty: 0.1,  
+            presence_penalty: 0.1,
+            stop: null,  
             stream: false
           }),
         }
@@ -53,23 +63,20 @@ export class AzureGPTService {
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(`Azure OpenAI API Error: ${response.status} - ${JSON.stringify(errorData)}`);
+        throw new Error(`Azure API Error: ${response.status} - ${JSON.stringify(errorData)}`);
       }
 
       const data = await response.json();
       return data.choices[0].message?.content || '';
     } catch (error) {
-      console.error('API Error:', error);
-      throw new Error('Failed to generate a response. Please try again.');
+      console.error('Azure OpenAI API Error:', error);
+      throw error;
     }
   }
 }
 
-// Initialize the Azure OpenAI client
-const apiKey = process.env.AZURE_OPENAI_API_KEY || '';
-const endpoint = process.env.AZURE_OPENAI_ENDPOINT || '';
-const deploymentName = process.env.AZURE_OPENAI_DEPLOYMENT_NAME || '';
-const service = new AzureGPTService(apiKey, endpoint, deploymentName);
+// Create a singleton instance of the service
+export const azureGptService = new AzureGPTService();
 
 export async function generateCode(prompt: string, existingCode?: string): Promise<string> {
   try {
@@ -77,24 +84,26 @@ export async function generateCode(prompt: string, existingCode?: string): Promi
 
     if (existingCode) {
       messages.push({
-        role: 'assistant',
+        role: "assistant",
         content: "Here's the current code we're working with:\n\n" + existingCode
       });
       messages.push({
-        role: 'user',
+        role: "user",
         content: `Based on this existing code, ${prompt}`
       });
     } else {
       messages.push({
-        role: 'user',
+        role: "user",
         content: prompt
       });
     }
 
-    return await service.chat(messages, "You are a helpful coding assistant.");
+    const systemPrompt = "You are an expert in HTML, CSS, and JavaScript. Generate complete, working code based on the user's request.";
+
+    return await azureGptService.chat(messages, systemPrompt);
   } catch (error) {
-    console.error('API Error:', error);
-    throw new Error('Failed to generate code. Please try again.');
+    console.error('Error in code generation:', error);
+    throw error;
   }
 }
 
@@ -104,7 +113,7 @@ export async function improveCode(code: string): Promise<string> {
       { role: 'user', content: `Improve this code while maintaining its core functionality: ${code}` }
     ];
 
-    return await service.chat(messages, "You are a helpful coding assistant.");
+    return await azureGptService.chat(messages, "You are a helpful coding assistant.");
   } catch (error) {
     console.error('API Error:', error);
     throw new Error('Failed to improve code. Please try again.');
@@ -117,7 +126,7 @@ export async function debugCode(code: string): Promise<string> {
       { role: 'user', content: `Debug and optimize this code while maintaining its core functionality: ${code}` }
     ];
 
-    return await service.chat(messages, "You are a helpful coding assistant.");
+    return await azureGptService.chat(messages, "You are a helpful coding assistant.");
   } catch (error) {
     console.error('API Error:', error);
     throw new Error('Failed to debug code. Please try again.');
