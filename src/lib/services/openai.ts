@@ -3,8 +3,13 @@ export async function generateCode(prompt: string, _existingCode?: string): Prom
     if (!prompt || prompt.trim() === '') {
       throw new Error('Prompt cannot be empty');
     }
+    
+    // Enhance prompt when existing code is provided to maintain context
+    const enhancedPrompt = _existingCode 
+      ? `${prompt}\n\nPlease maintain consistency with the existing code context provided. Keep the same style, naming conventions, and structure when appropriate.`
+      : prompt;
 
-    console.log('Generating code with prompt:', prompt.substring(0, 50) + '...');
+    console.log('Generating code with prompt:', enhancedPrompt.substring(0, 50) + '...');
 
     try {
       console.log('Sending request to API with prompt:', prompt.substring(0, 50) + '...');
@@ -14,7 +19,12 @@ export async function generateCode(prompt: string, _existingCode?: string): Prom
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ prompt, _existingCode }),
+        body: JSON.stringify({ 
+          prompt: enhancedPrompt, 
+          _existingCode,
+          preserveContext: !!_existingCode,
+          codeLanguage: _existingCode ? detectLanguage(_existingCode) : 'html'
+        }),
       });
 
       // Check if the response is OK before trying to parse it
@@ -65,7 +75,12 @@ export async function generateCode(prompt: string, _existingCode?: string): Prom
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ prompt, _existingCode }),
+        body: JSON.stringify({ 
+          prompt: enhancedPrompt, 
+          _existingCode,
+          preserveContext: !!_existingCode,
+          codeLanguage: _existingCode ? detectLanguage(_existingCode) : 'html'
+        }),
       });
 
       if (!fallbackResponse.ok) {
@@ -97,9 +112,10 @@ async function processCodeWithAI(
     throw new Error('No code provided to process');
   }
 
+  // Enhanced prompts with better context preservation instructions
   const prompts = {
-    improve: 'Improve this code while maintaining its core functionality',
-    debug: 'Debug and optimize this code while maintaining its core functionality'
+    improve: 'Improve this code while carefully preserving its core functionality, structure, and naming conventions. Add comments explaining improvements. Consider the existing code context before making changes.',
+    debug: 'Debug and optimize this code while maintaining its core functionality and structure. Preserve variable names, function signatures, and the overall architecture whenever possible. Add comments explaining fixes.'
   };
 
   const prompt = prompts[promptType];
@@ -115,7 +131,9 @@ async function processCodeWithAI(
       },
       body: JSON.stringify({
         prompt,
-        _existingCode: code
+        _existingCode: code,
+        preserveContext: true,
+        codeLanguage: detectLanguage(code)
       }),
     });
 
@@ -146,7 +164,9 @@ async function processCodeWithAI(
         },
         body: JSON.stringify({
           prompt,
-          _existingCode: code
+          _existingCode: code,
+          preserveContext: true,
+          codeLanguage: detectLanguage(code)
         }),
       });
 
@@ -180,6 +200,33 @@ export async function improveCode(code: string): Promise<string> {
     console.error('Code improvement error:', error);
     throw new Error(error instanceof Error ? error.message : 'Failed to improve code. Please try again.');
   }
+}
+
+/**
+ * Helper function to detect the language of code based on content patterns
+ * @param code The code to analyze
+ * @returns The detected language or 'html' as default
+ */
+function detectLanguage(code: string): string {
+  if (!code) return 'html';
+  
+  // Simple language detection based on patterns
+  if (code.includes('<!DOCTYPE html>') || (code.includes('<html') && code.includes('</html>'))) {
+    return 'html';
+  } else if (code.includes('import React') || code.includes('function') && code.includes('return') && (code.includes('JSX') || code.includes('<div'))) {
+    return 'jsx';
+  } else if (code.includes('class') && code.includes('extends') && code.includes('render()') && code.includes('return')) {
+    return 'jsx';
+  } else if (code.includes('const') && code.includes('=>') && code.includes('import') && code.includes('from')) {
+    return 'javascript';
+  } else if (code.includes('function') && code.includes('return') && code.includes('var') || code.includes('const') || code.includes('let')) {
+    return 'javascript';
+  } else if (code.includes('console.log')) {
+    return 'javascript';
+  }
+  
+  // Default to HTML for code editor
+  return 'html';
 }
 
 export async function debugCode(code: string): Promise<string> {
