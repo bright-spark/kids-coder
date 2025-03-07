@@ -1,4 +1,4 @@
-import { OpenAIClient, AzureKeyCredential } from '@azure/openai';
+import { OpenAI } from 'openai';
 import { NextResponse } from 'next/server';
 
 // Azure OpenAI configuration
@@ -88,11 +88,13 @@ export async function POST(req: Request) {
 
     console.log('Processing request with prompt:', prompt.substring(0, 50) + '...');
     
-    // Initialize Azure OpenAI client
-    const client = new OpenAIClient(
-      endpoint, 
-      new AzureKeyCredential(apiKey)
-    );
+    // Initialize OpenAI client configured for Azure
+    const client = new OpenAI({
+      apiKey: apiKey,
+      baseURL: `${endpoint}/openai/deployments/${deploymentName}`,
+      defaultQuery: { 'api-version': apiVersion },
+      defaultHeaders: { 'api-key': apiKey }
+    });
 
     // Prepare messages for the chat completion
     const messages = [
@@ -119,15 +121,13 @@ export async function POST(req: Request) {
 
     try {
       // Call Azure OpenAI API
-      const completion = await client.getChatCompletions(
-        deploymentName,
-        messages,
-        {
-          temperature: 0.7,
-          maxTokens: 2048,
-          n: 1
-        }
-      );
+      const completion = await client.chat.completions.create({
+        model: deploymentName,
+        messages: messages,
+        temperature: 0.7,
+        max_tokens: 2048,
+        n: 1
+      });
 
       if (!completion || !completion.choices || completion.choices.length === 0) {
         throw new Error('No completion generated from Azure OpenAI API');

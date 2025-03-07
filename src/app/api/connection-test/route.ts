@@ -1,5 +1,5 @@
 
-import { OpenAIClient, AzureKeyCredential } from '@azure/openai';
+import { OpenAI } from 'openai';
 import { NextResponse } from 'next/server';
 
 export async function GET() {
@@ -7,6 +7,7 @@ export async function GET() {
     // Get Azure configuration
     const apiKey = process.env.AZURE_OPENAI_API_KEY || '';
     const endpoint = process.env.AZURE_OPENAI_ENDPOINT || '';
+    const apiVersion = process.env.AZURE_OPENAI_VERSION || '2023-05-15';
     const deploymentName = process.env.AZURE_OPENAI_DEPLOYMENT_NAME || 'gpt-4o-mini';
     
     if (!apiKey || !endpoint) {
@@ -20,8 +21,13 @@ export async function GET() {
       }, { status: 400 });
     }
     
-    // Initialize Azure OpenAI client
-    const client = new OpenAIClient(endpoint, new AzureKeyCredential(apiKey));
+    // Initialize OpenAI client configured for Azure
+    const client = new OpenAI({
+      apiKey: apiKey,
+      baseURL: `${endpoint}/openai/deployments/${deploymentName}`,
+      defaultQuery: { 'api-version': apiVersion },
+      defaultHeaders: { 'api-key': apiKey }
+    });
     
     // Test with a simple completion
     const testMessages = [
@@ -30,11 +36,11 @@ export async function GET() {
     ];
     
     // Call Azure OpenAI API
-    const completion = await client.getChatCompletions(
-      deploymentName,
-      testMessages,
-      { maxTokens: 50 }
-    );
+    const completion = await client.chat.completions.create({
+      model: deploymentName,
+      messages: testMessages,
+      max_tokens: 50
+    });
     
     return NextResponse.json({
       status: 'success',
