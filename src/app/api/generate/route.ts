@@ -1,4 +1,4 @@
-import { AzureKeyCredential, OpenAIClient } from "@azure/openai";
+import { AzureOpenAIClient, KeyCredential } from "@azure/openai";
 import { NextResponse } from 'next/server';
 
 // Create Azure OpenAI client
@@ -7,7 +7,7 @@ const apiKey = process.env.AZURE_OPENAI_API_KEY || '';
 const deploymentName = process.env.AZURE_OPENAI_DEPLOYMENT_NAME || '';
 
 // Initialize the Azure OpenAI client
-const client = new OpenAIClient(endpoint, new AzureKeyCredential(apiKey));
+const client = new AzureOpenAIClient(endpoint, new KeyCredential(apiKey));
 
 // Ensure we're listening on all interfaces in production
 export const config = {
