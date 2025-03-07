@@ -72,62 +72,26 @@ export async function POST(req: Request) {
       | { role: 'system' | 'user' | 'assistant', content: string }
       | { role: 'function', content: string, name: string };
 
-    const messages: ChatMessage[] = [
-      { role: "system", content: SYSTEM_PROMPT },
+    // Create messages array for the API call
+    let userContent = prompt;
+
+    // Add existing code context if provided
+    if (existingCode && preserveContext) {
+      userContent += `\n\nHere is the existing code for context. Please maintain its style and structure while making improvements:\n\`\`\`${codeLanguage}\n${existingCode}\n\`\`\``;
+      console.log('Added code context to prompt, total length:', userContent.length);
+    }
+
+    const messages = [
+      {
+        role: 'system',
+        content: SYSTEM_PROMPT
+      },
+      {
+        role: 'user',
+        content: userContent
+      }
     ];
 
-    // Handle different contexts based on operation type
-    const isImproving = prompt.toLowerCase().includes('improve');
-    const isDebugging = prompt.toLowerCase().includes('debug');
-
-    console.log('Operation type:', { 
-      isImproving, 
-      isDebugging,
-      hasExistingCode: !!existingCode
-    });
-
-    if (existingCode) {
-      // Include the existing code context
-      messages.push({
-        role: "assistant",
-        content: "Here's the current code we're working with:\n\n```" + codeLanguage + "\n" + existingCode + "\n```"
-      });
-
-      if (isImproving) {
-        messages.push({
-          role: "user",
-          content: `Improve this code while maintaining its core functionality and purpose. Keep the same structure and style. Focus on:
-          1. Enhancing readability with better comments
-          2. Fixing any bugs or errors
-          3. Optimizing performance where possible
-          4. Maintaining all existing features
-
-          Return the complete improved code.`
-        });
-      } else if (isDebugging) {
-        messages.push({
-          role: "user",
-          content: `Debug this code and fix any issues while maintaining its original functionality. Focus on:
-          1. Identifying and fixing errors
-          2. Ensuring the code works as intended
-          3. Adding helpful comments explaining the fixes
-          4. Maintaining the same structure and purpose
-
-          Return the complete debugged code.`
-        });
-      } else {
-        messages.push({
-          role: "user",
-          content: `Based on this existing code, ${prompt}. Maintain consistency with the existing code style and structure.`
-        });
-      }
-    } else {
-      // No existing code, just use the prompt directly
-      messages.push({
-        role: "user",
-        content: prompt
-      });
-    }
 
     console.log(`Using deployment: ${deploymentName}`);
     console.log('Number of messages:', messages.length);

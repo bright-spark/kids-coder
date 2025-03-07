@@ -77,7 +77,7 @@ const FALLBACK_HTML = `<!DOCTYPE html>
 
 export async function POST(req: Request) {
   try {
-    const { prompt, _existingCode } = await req.json();
+    const { prompt, existingCode } = await req.json();
 
     console.log('Fallback API called with prompt:', prompt?.substring(0, 50));
 
