@@ -1,13 +1,15 @@
-import { AzureOpenAI } from "@azure/openai";
 import { NextResponse } from 'next/server';
+
+interface Message {
+  role: 'system' | 'user' | 'assistant';
+  content: string;
+}
 
 // Create Azure OpenAI client
 const endpoint = process.env.AZURE_OPENAI_ENDPOINT || '';
 const apiKey = process.env.AZURE_OPENAI_API_KEY || '';
 const deploymentName = process.env.AZURE_OPENAI_DEPLOYMENT_NAME || '';
-
-// Initialize the Azure OpenAI client
-const client = new AzureOpenAI(endpoint, apiKey, { apiVersion: "2023-05-15" });
+const apiVersion = "2023-05-15";
 
 // Ensure we're listening on all interfaces in production
 export const config = {
@@ -61,7 +63,7 @@ export async function POST(req: Request) {
   try {
     const { prompt, existingCode } = await req.json();
 
-    const messages = [
+    const messages: Message[] = [
       { role: "system", content: SYSTEM_PROMPT },
     ];
 
@@ -82,18 +84,33 @@ export async function POST(req: Request) {
     }
 
     // Azure OpenAI request
-    const result = await client.getChatCompletions(
-      deploymentName,
-      messages,
+    const response = await fetch(
+      `${endpoint}/openai/deployments/${deploymentName}/chat/completions?api-version=${apiVersion}`,
       {
-        temperature: 0.7,
-        maxTokens: 2048,
-        n: 1
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'api-key': apiKey,
+        },
+        body: JSON.stringify({
+          messages: messages,
+          temperature: 0.7,
+          max_tokens: 2048,
+          n: 1,
+          stream: false
+        }),
       }
     );
 
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(`Azure API Error: ${response.status} - ${JSON.stringify(errorData)}`);
+    }
+
+    const data = await response.json();
+
     return NextResponse.json({ 
-      code: result.choices[0].message?.content || ''
+      code: data.choices[0].message?.content || ''
     });
   } catch (error) {
     console.error('Azure OpenAI API Error:', error);
