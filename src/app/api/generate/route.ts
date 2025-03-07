@@ -1,23 +1,61 @@
 import { OpenAI } from 'openai';
 import { NextResponse } from 'next/server';
 
-// Load environment variables
-const apiKey = process.env.AZURE_OPENAI_API_KEY || '';
-const endpoint = process.env.AZURE_OPENAI_ENDPOINT || '';
+// Azure OpenAI configuration
+const apiKey = process.env.AZURE_OPENAI_API_KEY;
+const endpoint = process.env.AZURE_OPENAI_ENDPOINT;
 const apiVersion = process.env.AZURE_OPENAI_VERSION || '2023-05-15';
 const deploymentName = process.env.AZURE_OPENAI_DEPLOYMENT_NAME || 'gpt-4o-mini';
 
-// System prompt for code generation
-const SYSTEM_PROMPT = `You are an expert coding assistant for children learning to code.
-Focus on generating clean, simple, and well-commented HTML, CSS, and JavaScript code that is interactive and educational.
-Create code that is easy to understand for young learners, with fun and engaging elements when possible.
-Explain concepts in the comments using simple language. Use emojis occasionally in comments for friendliness.
-Prioritize safety and appropriate content for children at all times.`;
+// Check if environment is properly configured
+if (!apiKey || !endpoint) {
+  console.error('AZURE_OPENAI_API_KEY needs to be set for this app to work');
+}
+
+const HTML_TEMPLATE = `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kids Coder Project</title>
+    <style>
+        /* CSS styles will go here */
+    </style>
+</head>
+<body>
+    <!-- HTML content will go here -->
+    <script>
+        // JavaScript code will go here
+    </script>
+</body>
+</html>`;
+
+const SYSTEM_PROMPT = `You are an expert AI coding tutor for kids. Generate entertaining and fully working one file single page web apps in HTML/CSS/JS code. Your task is to provide the child with a step-by-step guide to building a single-page web app. The app should be visually appealing and easy to use. The app should be built using HTML, CSS, and JavaScript. The app should be fully functional and responsive. The app should be built using the latest web technologies and best practices.
+
+*Rules*:
+- ALWAYS use this exact HTML template structure:
+${HTML_TEMPLATE}
+- ALWAYS Keep code simple yet interesting and educational.
+- ALWAYS Use Bootstrap or Tailwind for CSS styling from a popular fast CDN.
+- ALWAYS use only vanilla JavaScript.
+- ALWAYS Include helpful comments explaining key concepts.
+- ALWAYS focus on good visual and interactive elements.
+- ALWAYS ensure code is safe and appropriate for children.
+- ALWAYS use emojis instead of images for image sources in code.
+- ALWAYS return complete, runnable HTML files with embedded CSS/JS.
+- ALWAYS use a library like Bootstrap or Tailwind for CSS via a quick CDN.
+- ALWAYS use semantic HTML tags for structuring the page.
+- ALWAYS use CSS for styling the page.
+- ALWAYS use responsive design for ensuring the page looks good on different devices.
+- NEVER include code delimeters (e.g. html, css, js) in the code.
+- NEVER include external libraries besides for Bootstrap or Tailwind.
+- NEVER include any explanatory text before or after the code.
+- NEVER include any text before or after the code.
+- ONLY return the HTML code, nothing else.
+- REMEMBER when given existing code, maintain its core concepts and theme while making dynamic improvements`;
 
 export async function POST(req: Request) {
   try {
-    console.log('API route called: /api/generate');
-
     // Check if required environment variables are set
     if (!apiKey || !endpoint) {
       console.error('AZURE_OPENAI_API_KEY and AZURE_OPENAI_ENDPOINT need to be set for this app to work');
@@ -28,20 +66,11 @@ export async function POST(req: Request) {
     }
 
     // Parse request body with error handling
-    let prompt, existingCode, preserveContext, codeLanguage;
+    let prompt, existingCode;
     try {
       const body = await req.json();
       prompt = body.prompt;
-      existingCode = body.existingCode; // Using the correct parameter name
-      preserveContext = body.preserveContext;
-      codeLanguage = body.codeLanguage || 'html';
-
-      console.log('Request params:', {
-        promptLength: prompt?.length,
-        existingCodeLength: existingCode?.length,
-        preserveContext,
-        codeLanguage
-      });
+      existingCode = body.existingCode;
     } catch (parseError) {
       console.error('Error parsing request body:', parseError);
       return NextResponse.json(
@@ -58,7 +87,7 @@ export async function POST(req: Request) {
     }
 
     console.log('Processing request with prompt:', prompt.substring(0, 50) + '...');
-
+    
     // Initialize OpenAI client configured for Azure
     const client = new OpenAI({
       apiKey: apiKey,
@@ -71,34 +100,31 @@ export async function POST(req: Request) {
     type ChatMessage = 
       | { role: 'system' | 'user' | 'assistant', content: string }
       | { role: 'function', content: string, name: string };
-
-    // Create messages array for the API call
-    let userContent = prompt;
-
-    // Add existing code context if provided
-    if (existingCode && preserveContext) {
-      userContent += `\n\nHere is the existing code for context. Please maintain its style and structure while making improvements:\n\`\`\`${codeLanguage}\n${existingCode}\n\`\`\``;
-      console.log('Added code context to prompt, total length:', userContent.length);
-    }
-
-    const messages: Array<OpenAI.Chat.ChatCompletionMessageParam> = [
-      {
-        role: 'system',
-        content: SYSTEM_PROMPT
-      },
-      {
-        role: 'user',
-        content: userContent
-      }
+      
+    const messages: ChatMessage[] = [
+      { role: "system", content: SYSTEM_PROMPT },
     ];
 
+    if (existingCode) {
+      messages.push({
+        role: "assistant",
+        content: "Here's the current code we're working with:\n\n" + existingCode
+      });
+      messages.push({
+        role: "user",
+        content: `Based on this existing code, ${prompt}`
+      });
+    } else {
+      messages.push({
+        role: "user",
+        content: prompt
+      });
+    }
 
     console.log(`Using deployment: ${deploymentName}`);
-    console.log('Number of messages:', messages.length);
 
     try {
       // Call Azure OpenAI API
-      console.log('Calling Azure OpenAI API...');
       const completion = await client.chat.completions.create({
         model: deploymentName,
         messages: messages,
@@ -117,27 +143,10 @@ export async function POST(req: Request) {
         throw new Error('Empty response from Azure OpenAI API');
       }
 
-      // Extract code from markdown code blocks if present
-      let cleanedCode = generatedCode;
-      const codeBlockRegex = /```(?:\w+)?\s*([\s\S]*?)```/g;
-
-      // Alternative approach without using matchAll
-      const matches = [];
-      let match;
-      while ((match = codeBlockRegex.exec(generatedCode)) !== null) {
-        matches.push(match);
-      }
-
-      if (matches.length > 0) {
-        // Use the first code block if found
-        cleanedCode = matches[0][1].trim();
-        console.log('Extracted code from markdown code block');
-      }
-
-      console.log('Generated code length:', cleanedCode.length);
-      return NextResponse.json({ code: cleanedCode });
+      return NextResponse.json({ code: generatedCode });
     } catch (apiError) {
       console.error('Error calling Azure OpenAI API:', apiError);
+
       return NextResponse.json(
         { error: 'Failed to call Azure OpenAI API: ' + (apiError instanceof Error ? apiError.message : String(apiError)) },
         { status: 500 }
