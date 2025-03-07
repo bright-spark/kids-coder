@@ -13,7 +13,7 @@ export class AzureGPTService {
     apiKey: string,
     endpoint: string,
     deploymentName: string,
-    apiVersion: string = "2023-05-15"
+    apiVersion: string = process.env.AZURE_OPENAI_VERSION || "2023-05-15"
   ) {
     if (!apiKey || !endpoint) {
       throw new Error('Azure OpenAI API key and endpoint are required');

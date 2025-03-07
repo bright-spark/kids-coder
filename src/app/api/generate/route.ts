@@ -9,7 +9,7 @@ interface Message {
 const endpoint = process.env.AZURE_OPENAI_ENDPOINT || '';
 const apiKey = process.env.AZURE_OPENAI_API_KEY || '';
 const deploymentName = process.env.AZURE_OPENAI_DEPLOYMENT_NAME || '';
-const apiVersion = "2023-05-15";
+const apiVersion = process.env.AZURE_OPENAI_VERSION || "2023-05-15";
 
 // Ensure we're listening on all interfaces in production
 export const config = {
