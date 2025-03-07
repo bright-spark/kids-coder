@@ -81,7 +81,7 @@ export async function POST(req: Request) {
       console.log('Added code context to prompt, total length:', userContent.length);
     }
 
-    const messages = [
+    const messages: Array<OpenAI.Chat.ChatCompletionMessageParam> = [
       {
         role: 'system',
         content: SYSTEM_PROMPT
