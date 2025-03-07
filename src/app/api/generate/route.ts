@@ -97,7 +97,11 @@ export async function POST(req: Request) {
     });
 
     // Prepare messages for the chat completion
-    const messages: Array<{role: 'system' | 'user' | 'assistant' | 'function', content: string}> = [
+    type ChatMessage = 
+      | { role: 'system' | 'user' | 'assistant', content: string }
+      | { role: 'function', content: string, name: string };
+      
+    const messages: ChatMessage[] = [
       { role: "system", content: SYSTEM_PROMPT },
     ];
 
