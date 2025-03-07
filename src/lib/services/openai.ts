@@ -7,6 +7,8 @@ export async function generateCode(prompt: string, existingCode?: string): Promi
     console.log('Generating code with prompt:', prompt.substring(0, 50) + '...');
 
     try {
+      console.log('Sending request to API with prompt:', prompt.substring(0, 50) + '...');
+      
       const response = await fetch('/api/generate', {
         method: 'POST',
         headers: {
@@ -17,10 +19,24 @@ export async function generateCode(prompt: string, existingCode?: string): Promi
 
       // Check if the response is OK before trying to parse it
       if (!response.ok) {
-        throw new Error(`API request failed with status ${response.status}`);
+        console.error('Response status:', response.status);
+        const errorText = await response.text();
+        console.error('Error response:', errorText);
+        try {
+          const errorJson = JSON.parse(errorText);
+          throw new Error(`API request failed: ${errorJson.error || `Status ${response.status}`}`);
+        } catch (e) {
+          throw new Error(`API request failed with status ${response.status}: ${errorText.substring(0, 100)}`);
+        }
       }
 
-      const data = await response.json();
+      let data;
+      try {
+        data = await response.json();
+      } catch (parseError) {
+        console.error('Failed to parse response as JSON:', parseError);
+        throw new Error('Invalid JSON response from API');
+      }
 
       if (!data.code) {
         throw new Error('No code was generated. Try a different prompt.');

@@ -58,14 +58,26 @@ export async function POST(req: Request) {
   try {
     // Check if required environment variables are set
     if (!apiKey || !endpoint) {
-      console.error('AZURE_OPENAI_API_KEY needs to be set for this app to work');
+      console.error('AZURE_OPENAI_API_KEY and AZURE_OPENAI_ENDPOINT need to be set for this app to work');
       return NextResponse.json(
         { error: 'API configuration is missing. Please set AZURE_OPENAI_API_KEY and AZURE_OPENAI_ENDPOINT environment variables.' },
         { status: 500 }
       );
     }
 
-    const { prompt, existingCode } = await req.json();
+    // Parse request body with error handling
+    let prompt, existingCode;
+    try {
+      const body = await req.json();
+      prompt = body.prompt;
+      existingCode = body.existingCode;
+    } catch (parseError) {
+      console.error('Error parsing request body:', parseError);
+      return NextResponse.json(
+        { error: 'Invalid request format' },
+        { status: 400 }
+      );
+    }
 
     if (!prompt) {
       return NextResponse.json(
@@ -74,11 +86,13 @@ export async function POST(req: Request) {
       );
     }
 
+    console.log('Processing request with prompt:', prompt.substring(0, 50) + '...');
+    
     // Initialize Azure OpenAI client
     const client = new AzureOpenAI({ 
       apiKey, 
       endpoint, 
-      apiVersion
+      apiVersion 
     });
 
     // Prepare messages for the chat completion
