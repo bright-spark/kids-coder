@@ -1,4 +1,4 @@
-import { AzureOpenAIClient, KeyCredential } from "@azure/openai";
+import { OpenAIClient, AzureKeyCredential } from "@azure/openai";
 
 // Create Azure OpenAI client
 const endpoint = process.env.AZURE_OPENAI_ENDPOINT || '';
@@ -6,7 +6,7 @@ const apiKey = process.env.AZURE_OPENAI_API_KEY || '';
 const deploymentName = process.env.AZURE_OPENAI_DEPLOYMENT_NAME || '';
 
 // Initialize the Azure OpenAI client
-const client = new AzureOpenAIClient(endpoint, new KeyCredential(apiKey));
+const client = new OpenAIClient(endpoint, new AzureKeyCredential(apiKey));
 
 export async function generateCode(prompt: string, existingCode?: string): Promise<string> {
   try {
