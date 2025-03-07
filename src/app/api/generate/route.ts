@@ -98,21 +98,21 @@ export async function POST(req: Request) {
 
     // Prepare messages for the chat completion
     const messages = [
-      { role: "system", content: SYSTEM_PROMPT },
+      { role: "system" as const, content: SYSTEM_PROMPT },
     ];
 
     if (existingCode) {
       messages.push({
-        role: "assistant",
+        role: "assistant" as const,
         content: "Here's the current code we're working with:\n\n" + existingCode
       });
       messages.push({
-        role: "user",
+        role: "user" as const,
         content: `Based on this existing code, ${prompt}`
       });
     } else {
       messages.push({
-        role: "user",
+        role: "user" as const,
         content: prompt
       });
     }

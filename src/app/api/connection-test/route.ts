@@ -31,8 +31,8 @@ export async function GET() {
     
     // Test with a simple completion
     const testMessages = [
-      { role: "system", content: "You are a helpful assistant." },
-      { role: "user", content: "Say 'Hello from Azure OpenAI!'" }
+      { role: "system" as const, content: "You are a helpful assistant." },
+      { role: "user" as const, content: "Say 'Hello from Azure OpenAI!'" }
     ];
     
     // Call Azure OpenAI API
