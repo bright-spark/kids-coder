@@ -21,7 +21,7 @@ export async function generateCode(prompt: string, _existingCode?: string): Prom
         },
         body: JSON.stringify({ 
           prompt: enhancedPrompt, 
-          existingCode: _existingCode,
+          existingCode: _existingCode || '',
           preserveContext: !!_existingCode,
           codeLanguage: _existingCode ? detectLanguage(_existingCode) : 'html'
         }),
@@ -77,7 +77,7 @@ export async function generateCode(prompt: string, _existingCode?: string): Prom
         },
         body: JSON.stringify({ 
           prompt: enhancedPrompt, 
-          existingCode: _existingCode,
+          existingCode: _existingCode || '',
           preserveContext: !!_existingCode,
           codeLanguage: _existingCode ? detectLanguage(_existingCode) : 'html'
         }),

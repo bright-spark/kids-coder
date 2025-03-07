@@ -87,6 +87,7 @@ export async function POST(req: Request) {
     }
 
     console.log('Processing request with prompt:', prompt.substring(0, 50) + '...');
+    console.log('Existing code provided:', existingCode ? 'Yes, length: ' + existingCode.length : 'No');
     
     // Initialize OpenAI client configured for Azure
     const client = new OpenAI({
