@@ -144,7 +144,7 @@ importers:
         specifier: ^0.4.4
         version: 0.4.4(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       openai:
-        specifier: ^4.28.0
+        specifier: ^4.85.4
         version: 4.85.4(zod@3.24.2)
       react:
         specifier: ^19.0.0
