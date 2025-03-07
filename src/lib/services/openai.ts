@@ -10,25 +10,26 @@ export class AzureGPTService {
   private apiVersion: string;
 
   constructor(
-    apiKey: string = process.env.AZURE_OPENAI_API_KEY || '',
-    endpoint: string = process.env.AZURE_OPENAI_ENDPOINT || '',
-    deploymentName: string = process.env.AZURE_OPENAI_DEPLOYMENT_NAME || '',
-    apiVersion: string = process.env.AZURE_OPENAI_VERSION || "2023-05-15"
+    apiKey?: string,
+    endpoint?: string,
+    deploymentName?: string,
+    apiVersion?: string
   ) {
-    if (!apiKey || !endpoint) {
+    // These will only be accessible server-side
+    this.apiKey = apiKey || process.env.AZURE_OPENAI_API_KEY || '';
+    this.endpoint = endpoint || process.env.AZURE_OPENAI_ENDPOINT || '';
+    this.deploymentName = deploymentName || process.env.AZURE_OPENAI_DEPLOYMENT_NAME || '';
+    this.apiVersion = apiVersion || process.env.AZURE_OPENAI_VERSION || "2023-05-15";
+
+    if (!this.apiKey || !this.endpoint) {
       throw new Error('Azure OpenAI API key and endpoint are required');
     }
 
-    this.apiKey = apiKey;
-    this.endpoint = endpoint;
-    this.deploymentName = deploymentName;
-    this.apiVersion = apiVersion;
-
     console.log("AzureGPTService initialized with:", {
-      endpointProvided: !!endpoint,
-      apiKeyProvided: !!apiKey,
-      deploymentNameProvided: !!deploymentName,
-      apiVersionProvided: !!apiVersion
+      endpointProvided: !!this.endpoint,
+      apiKeyProvided: !!this.apiKey,
+      deploymentNameProvided: !!this.deploymentName,
+      apiVersionProvided: !!this.apiVersion
     });
   }
 
@@ -75,8 +76,8 @@ export class AzureGPTService {
   }
 }
 
-// Create a singleton instance of the service
-export const azureGptService = new AzureGPTService();
+// Don't create a singleton instance that would be included in client-side code
+// Each API route should create its own instance
 
 export async function generateCode(prompt: string, existingCode?: string): Promise<string> {
   try {
