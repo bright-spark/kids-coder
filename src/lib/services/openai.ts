@@ -1,6 +1,3 @@
-
-import { AzureOpenAI } from 'openai';
-
 export async function generateCode(prompt: string, existingCode?: string): Promise<string> {
   try {
     const response = await fetch('/api/generate', {
