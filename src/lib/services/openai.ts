@@ -16,7 +16,17 @@ export async function generateCode(prompt: string, existingCode?: string): Promi
 
     let data;
     try {
-      data = await response.json();
+      // Get the raw text first to see what's being returned
+      const responseText = await response.text();
+      console.log('Raw response:', responseText.substring(0, 200) + (responseText.length > 200 ? '...' : ''));
+      
+      // Try to parse as JSON
+      try {
+        data = JSON.parse(responseText);
+      } catch (parseError) {
+        console.error('Failed to parse response as JSON:', parseError);
+        throw new Error(`Server returned invalid JSON. Received HTML or text instead: ${responseText.substring(0, 100)}...`);
+      }
     } catch (jsonError) {
       console.error('Failed to parse response as JSON:', jsonError);
       console.log('Response status:', response.status);

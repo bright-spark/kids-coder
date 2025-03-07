@@ -103,6 +103,9 @@ export async function POST(req: Request) {
     console.log('API key configured:', apiKey ? 'Yes (key hidden)' : 'No');
     
     try {
+      console.log('Calling Azure OpenAI API with deployment:', deploymentName);
+      console.log('Number of messages being sent:', messages.length);
+      
       const completion = await client.getChatCompletions(
         deploymentName,
         messages,
