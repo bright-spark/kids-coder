@@ -15,12 +15,12 @@
       "static/css/68bf49fe567011e9.css",
       "static/chunks/app/layout-735f09a2d5fd5fa0.js"
     ],
-    "/api/fallback/route": [
+    "/api/connection-test/route": [
       "static/chunks/webpack-0f0f8689ec75315c.js",
       "static/chunks/778022d2-09bdbcb776906026.js",
       "static/chunks/85-9a71ee794c0062f9.js",
       "static/chunks/main-app-5cd78171d7680558.js",
-      "static/chunks/app/api/fallback/route-c595ee2fde94648f.js"
+      "static/chunks/app/api/connection-test/route-5931f1130dac8ee8.js"
     ],
     "/api/generate/route": [
       "static/chunks/webpack-0f0f8689ec75315c.js",
@@ -29,19 +29,19 @@
       "static/chunks/main-app-5cd78171d7680558.js",
       "static/chunks/app/api/generate/route-8341015d5e9dd992.js"
     ],
+    "/api/fallback/route": [
+      "static/chunks/webpack-0f0f8689ec75315c.js",
+      "static/chunks/778022d2-09bdbcb776906026.js",
+      "static/chunks/85-9a71ee794c0062f9.js",
+      "static/chunks/main-app-5cd78171d7680558.js",
+      "static/chunks/app/api/fallback/route-c595ee2fde94648f.js"
+    ],
     "/api/status/route": [
       "static/chunks/webpack-0f0f8689ec75315c.js",
       "static/chunks/778022d2-09bdbcb776906026.js",
       "static/chunks/85-9a71ee794c0062f9.js",
       "static/chunks/main-app-5cd78171d7680558.js",
       "static/chunks/app/api/status/route-4c3f03fe16baf9b3.js"
-    ],
-    "/api/connection-test/route": [
-      "static/chunks/webpack-0f0f8689ec75315c.js",
-      "static/chunks/778022d2-09bdbcb776906026.js",
-      "static/chunks/85-9a71ee794c0062f9.js",
-      "static/chunks/main-app-5cd78171d7680558.js",
-      "static/chunks/app/api/connection-test/route-5931f1130dac8ee8.js"
     ],
     "/api/test/route": [
       "static/chunks/webpack-0f0f8689ec75315c.js",
