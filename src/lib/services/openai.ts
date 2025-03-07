@@ -114,8 +114,8 @@ async function processCodeWithAI(
 
   // Enhanced prompts with better context preservation instructions
   const prompts = {
-    improve: 'Improve this code while carefully preserving its core functionality, structure, and naming conventions. Add comments explaining improvements. Consider the existing code context before making changes.',
-    debug: 'Debug and optimize this code while maintaining its core functionality and structure. Preserve variable names, function signatures, and the overall architecture whenever possible. Add comments explaining fixes.'
+    improve: 'Improve this code while carefully preserving its core functionality, structure, naming conventions, and purpose. Do not change the type of application. Add comments explaining improvements. Consider the existing code context before making changes.',
+    debug: 'Debug and optimize this code while maintaining its core functionality, structure, and purpose. Do not change the type of application. Preserve variable names, function signatures, and the overall architecture whenever possible. Add comments explaining fixes.'
   };
 
   const prompt = prompts[promptType];
