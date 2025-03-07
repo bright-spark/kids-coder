@@ -1,4 +1,4 @@
-import { AzureOpenAI } from '@azure/openai';
+import { OpenAIClient, AzureKeyCredential } from '@azure/openai';
 import { NextResponse } from 'next/server';
 
 // Azure OpenAI configuration
@@ -89,11 +89,10 @@ export async function POST(req: Request) {
     console.log('Processing request with prompt:', prompt.substring(0, 50) + '...');
     
     // Initialize Azure OpenAI client
-    const client = new AzureOpenAI({ 
-      apiKey, 
+    const client = new OpenAIClient(
       endpoint, 
-      apiVersion 
-    });
+      new AzureKeyCredential(apiKey)
+    );
 
     // Prepare messages for the chat completion
     const messages = [

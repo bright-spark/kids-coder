@@ -20,14 +20,25 @@ export async function generateCode(prompt: string, existingCode?: string): Promi
       // Check if the response is OK before trying to parse it
       if (!response.ok) {
         console.error('Response status:', response.status);
-        const errorText = await response.text();
-        console.error('Error response:', errorText);
+        let errorMessage = `Error status code: ${response.status}`;
+        
         try {
-          const errorJson = JSON.parse(errorText);
-          throw new Error(`API request failed: ${errorJson.error || `Status ${response.status}`}`);
-        } catch (e) {
-          throw new Error(`API request failed with status ${response.status}: ${errorText.substring(0, 100)}`);
+          const errorText = await response.text();
+          console.error('Error response:', errorText);
+          
+          // Try to parse as JSON for structured error
+          try {
+            const errorJson = JSON.parse(errorText);
+            errorMessage = errorJson.error || `API request failed with status ${response.status}`;
+          } catch (jsonError) {
+            // Not JSON, use text directly
+            errorMessage = `API request failed: ${errorText.substring(0, 100)}`;
+          }
+        } catch (textError) {
+          console.error('Failed to get error text:', textError);
         }
+        
+        throw new Error(errorMessage);
       }
 
       let data;
