@@ -1,21 +1,9 @@
+import { OpenAI } from 'openai';
 import { NextResponse } from 'next/server';
 
-interface Message {
-  role: 'system' | 'user' | 'assistant';
-  content: string;
-}
-
-// Create Azure OpenAI client
-const endpoint = process.env.AZURE_OPENAI_ENDPOINT || '';
-const apiKey = process.env.AZURE_OPENAI_API_KEY || '';
-const deploymentName = process.env.AZURE_OPENAI_DEPLOYMENT_NAME || '';
-const apiVersion = process.env.AZURE_OPENAI_VERSION || "2023-05-15";
-
-// Ensure we're listening on all interfaces in production
-export const config = {
-  runtime: 'edge',
-  regions: ['iad1']
-};
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY
+});
 
 const HTML_TEMPLATE = `<!DOCTYPE html>
 <html lang="en">
@@ -61,17 +49,9 @@ ${HTML_TEMPLATE}
 
 export async function POST(req: Request) {
   try {
-    // Debug environment variables at API route level
-    console.log("API Route - Environment variables check:", {
-      AZURE_OPENAI_API_KEY_exists: !!process.env.AZURE_OPENAI_API_KEY,
-      AZURE_OPENAI_ENDPOINT_exists: !!process.env.AZURE_OPENAI_ENDPOINT,
-      AZURE_OPENAI_DEPLOYMENT_NAME_exists: !!process.env.AZURE_OPENAI_DEPLOYMENT_NAME,
-      AZURE_OPENAI_VERSION_exists: !!process.env.AZURE_OPENAI_VERSION
-    });
-    
     const { prompt, existingCode } = await req.json();
 
-    const messages: Message[] = [
+    const messages: OpenAI.Chat.ChatCompletionMessageParam[] = [
       { role: "system", content: SYSTEM_PROMPT },
     ];
 
@@ -91,29 +71,20 @@ export async function POST(req: Request) {
       });
     }
 
-    // Import the Azure OpenAI service
-    const { AzureGPTService } = await import('@/lib/services/openai');
-    
-    // Create a new instance for this API route
-    const azureService = new AzureGPTService();
-    
-    // Get the response from Azure OpenAI
-    const content = await azureService.chat(messages, SYSTEM_PROMPT);
-    
-    // Mock data structure to match the expected format
-    const data = { 
-      choices: [{ 
-        message: { 
-          content 
-        } 
-      }] 
-    };
+    const completion = await openai.chat.completions.create({
+      model: "gpt-4o-mini",
+      messages,
+      temperature: 0.7,  // Adjust temperature for creativity
+      max_tokens: 2048,  // Adjust tokens for optimal response length
+      n: 1,              // Generate one completion
+      stop: null         // Allow completion to determine stop
+    });
 
     return NextResponse.json({ 
-      code: data.choices[0].message?.content || ''
+      code: completion.choices[0].message.content || ''
     });
   } catch (error) {
-    console.error('Azure OpenAI API Error:', error);
+    console.error('OpenAI API Error:', error);
     return NextResponse.json(
       { error: 'Failed to generate code' },
       { status: 500 }

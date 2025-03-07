@@ -5,8 +5,8 @@ run = "pnpm run dev"
 channel = "stable-24_05"
 
 [deployment]
-run = ["sh", "-c", "npm run start"]
-build = ["sh", "-c", "npm run build"]
+run = ["sh", "-c", "pnpm start"]
+build = ["sh", "-c", "pnpm build"]
 
 [[ports]]
 localPort = 3000

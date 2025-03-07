@@ -1,113 +1,71 @@
+export async function generateCode(prompt: string, existingCode?: string): Promise<string> {
+  try {
+    const response = await fetch('/api/generate', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ prompt, existingCode }),
+    });
 
-import { OpenAI } from "openai";
+    if (!response.ok) {
+      throw new Error('Failed to generate code');
+    }
 
-interface Message {
-  role: 'system' | 'user' | 'assistant';
-  content: string;
+    const data = await response.json();
+    return data.code;
+  } catch (error) {
+    console.error('API Error:', error);
+    throw new Error('Failed to generate code. Please try again.');
+  }
 }
 
-export class AzureGPTService {
-  private client: OpenAI;
-  private apiKey: string;
-  private endpoint: string;
-  private deploymentName: string;
-  private apiVersion: string;
-
-  constructor(
-    apiKey?: string,
-    endpoint?: string,
-    deploymentName?: string,
-    apiVersion?: string
-  ) {
-    // Get from environment or passed in
-    this.apiKey = apiKey || process.env.AZURE_OPENAI_API_KEY || '';
-    this.endpoint = endpoint || process.env.AZURE_OPENAI_ENDPOINT || '';
-    this.deploymentName = deploymentName || process.env.AZURE_OPENAI_DEPLOYMENT_NAME || '';
-    this.apiVersion = apiVersion || process.env.AZURE_OPENAI_VERSION || "2023-05-15";
-
-    // Enhanced logging to help diagnose the issue
-    console.log("Environment variables check:", {
-      AZURE_OPENAI_API_KEY_exists: !!process.env.AZURE_OPENAI_API_KEY,
-      AZURE_OPENAI_ENDPOINT_exists: !!process.env.AZURE_OPENAI_ENDPOINT,
-      AZURE_OPENAI_DEPLOYMENT_NAME_exists: !!process.env.AZURE_OPENAI_DEPLOYMENT_NAME,
-      AZURE_OPENAI_VERSION_exists: !!process.env.AZURE_OPENAI_VERSION
+export async function improveCode(code: string): Promise<string> {
+  try {
+    const response = await fetch('/api/generate', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        prompt: 'Improve this code while maintaining its core functionality',
+        existingCode: code
+      }),
     });
 
-    if (!this.apiKey || !this.endpoint) {
-      throw new Error('Azure OpenAI API key and endpoint are required');
+    if (!response.ok) {
+      throw new Error('Failed to improve code');
     }
 
-    // Create OpenAI client configured for Azure
-    this.client = new OpenAI({
-      apiKey: this.apiKey,
-      baseURL: `${this.endpoint}/openai/deployments/${this.deploymentName}`,
-      defaultQuery: { 'api-version': this.apiVersion },
+    const data = await response.json();
+    return data.code;
+  } catch (error) {
+    console.error('API Error:', error);
+    throw new Error('Failed to improve code. Please try again.');
+  }
+}
+
+export async function debugCode(code: string): Promise<string> {
+  try {
+    const response = await fetch('/api/generate', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        prompt: 'Debug and optimize this code while maintaining its core functionality',
+        existingCode: code
+      }),
     });
-  }
 
-  async chat(messages: Message[], systemPrompt?: string): Promise<string> {
-    try {
-      // Add system prompt if provided and not already in messages
-      if (systemPrompt && !messages.some(m => m.role === 'system')) {
-        messages.unshift({ role: 'system', content: systemPrompt });
-      }
-
-      const response = await this.client.chat.completions.create({
-        model: this.deploymentName,
-        messages: messages as any,
-        temperature: 0.7,
-        max_tokens: 4000
-      });
-
-      return response.choices[0]?.message?.content || '';
-    } catch (error) {
-      console.error('Error in Azure OpenAI chat:', error);
-      throw error;
+    if (!response.ok) {
+      throw new Error('Failed to debug code');
     }
-  }
 
-  // Add these utility functions that are referenced in other components
-  async generateCode(prompt: string, existingCode?: string): Promise<string> {
-    const messages: Message[] = [];
-    
-    if (existingCode) {
-      messages.push({
-        role: 'assistant',
-        content: `Here's the current code:\n\n${existingCode}`
-      });
-      messages.push({
-        role: 'user',
-        content: `Based on this code, ${prompt}`
-      });
-    } else {
-      messages.push({
-        role: 'user',
-        content: prompt
-      });
-    }
-    
-    return this.chat(messages);
-  }
-  
-  async improveCode(code: string, prompt: string): Promise<string> {
-    const messages: Message[] = [
-      {
-        role: 'user',
-        content: `Improve this code:\n\n${code}\n\nSpecifically: ${prompt}`
-      }
-    ];
-    
-    return this.chat(messages);
-  }
-  
-  async debugCode(code: string, error: string): Promise<string> {
-    const messages: Message[] = [
-      {
-        role: 'user',
-        content: `Debug this code:\n\n${code}\n\nError: ${error}`
-      }
-    ];
-    
-    return this.chat(messages);
+    const data = await response.json();
+    return data.code;
+  } catch (error) {
+    console.error('API Error:', error);
+    throw new Error('Failed to debug code. Please try again.');
   }
 }
