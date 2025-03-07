@@ -1,4 +1,4 @@
-export async function generateCode(prompt: string, existingCode?: string): Promise<string> {
+export async function generateCode(prompt: string, _existingCode?: string): Promise<string> {
   try {
     if (!prompt || prompt.trim() === '') {
       throw new Error('Prompt cannot be empty');
@@ -8,36 +8,37 @@ export async function generateCode(prompt: string, existingCode?: string): Promi
 
     try {
       console.log('Sending request to API with prompt:', prompt.substring(0, 50) + '...');
-      
+
       const response = await fetch('/api/generate', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ prompt, existingCode }),
+        body: JSON.stringify({ prompt, _existingCode }),
       });
 
       // Check if the response is OK before trying to parse it
       if (!response.ok) {
         console.error('Response status:', response.status);
         let errorMessage = `Error status code: ${response.status}`;
-        
+
         try {
           const errorText = await response.text();
           console.error('Error response:', errorText);
-          
+
           // Try to parse as JSON for structured error
           try {
             const errorJson = JSON.parse(errorText);
             errorMessage = errorJson.error || `API request failed with status ${response.status}`;
-          } catch (jsonError) {
+          } catch (error) {
             // Not JSON, use text directly
+            const _jsonError = error; // Fixed: Added underscore
             errorMessage = `API request failed: ${errorText.substring(0, 100)}`;
           }
         } catch (textError) {
           console.error('Failed to get error text:', textError);
         }
-        
+
         throw new Error(errorMessage);
       }
 
@@ -64,7 +65,7 @@ export async function generateCode(prompt: string, existingCode?: string): Promi
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ prompt, existingCode }),
+        body: JSON.stringify({ prompt, _existingCode }),
       });
 
       if (!fallbackResponse.ok) {
@@ -92,7 +93,7 @@ export async function improveCode(code: string): Promise<string> {
         },
         body: JSON.stringify({
           prompt: 'Improve this code while maintaining its core functionality',
-          existingCode: code
+          _existingCode: code
         }),
       });
 
@@ -102,11 +103,11 @@ export async function improveCode(code: string): Promise<string> {
       }
 
       const data = await response.json();
-      
+
       if (!data.code) {
         throw new Error('No code was returned from the API');
       }
-      
+
       return data.code;
     } catch (primaryError) {
       console.error('Primary API call failed for code improvement, trying fallback:', primaryError);
@@ -119,7 +120,7 @@ export async function improveCode(code: string): Promise<string> {
         },
         body: JSON.stringify({
           prompt: 'Improve this code while maintaining its core functionality',
-          existingCode: code
+          _existingCode: code
         }),
       });
 
@@ -148,7 +149,7 @@ export async function debugCode(code: string): Promise<string> {
         },
         body: JSON.stringify({
           prompt: 'Debug and optimize this code while maintaining its core functionality',
-          existingCode: code
+          _existingCode: code
         }),
       });
 
@@ -158,11 +159,11 @@ export async function debugCode(code: string): Promise<string> {
       }
 
       const data = await response.json();
-      
+
       if (!data.code) {
         throw new Error('No code was returned from the API');
       }
-      
+
       return data.code;
     } catch (primaryError) {
       console.error('Primary API call failed for code debugging, trying fallback:', primaryError);
@@ -175,7 +176,7 @@ export async function debugCode(code: string): Promise<string> {
         },
         body: JSON.stringify({
           prompt: 'Debug and optimize this code while maintaining its core functionality',
-          existingCode: code
+          _existingCode: code
         }),
       });
 
