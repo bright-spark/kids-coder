@@ -7,7 +7,6 @@ import { LivePreview } from '@/components/preview/live-preview'
 import { MessageCircle, Code2, Play } from 'lucide-react'
 import { useAppStore } from '@/lib/store'
 import { Toaster } from '@/components/ui/toaster'
-import { ToastTest } from './toast-test'; // Added import for ToastTest component
 
 export default function Home() {
   const { activeTab, setActiveTab, code } = useAppStore()
@@ -57,7 +56,6 @@ export default function Home() {
             <LivePreview code={code.current} />
           </TabsContent>
         </Tabs>
-        <ToastTest /> {/* Added ToastTest component */}
       </div>
       <Toaster />
     </div>
