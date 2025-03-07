@@ -1,5 +1,5 @@
 
-import { OpenAI } from 'openai';
+import { AzureOpenAI } from 'openai';
 
 export async function generateCode(prompt: string, existingCode?: string): Promise<string> {
   try {

@@ -1,8 +1,8 @@
-import { OpenAI } from '@azure/openai';
+import { AzureOpenAI  } from '@azure/openai';
 import { NextResponse } from 'next/server';
 
 // Azure OpenAI configuration
-const client = new OpenAI({
+const client = new AzureOpenAI ({
   apiKey: process.env.AZURE_OPENAI_API_KEY || '',
   endpoint: process.env.AZURE_OPENAI_ENDPOINT || '',
   apiVersion: '2023-05-15' // Use the appropriate API version
