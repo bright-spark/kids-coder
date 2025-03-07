@@ -13,8 +13,8 @@ export default [
   {
     files: ['**/*.{ts,tsx}'],
     plugins: {
-      '@next/next': nextPlugin,
-      'react-hooks': reactHooks,
+      // Use object format instead of array for plugins
+      'react-hooks': reactHooks
     },
     languageOptions: {
       parser: tseslint.parser,
