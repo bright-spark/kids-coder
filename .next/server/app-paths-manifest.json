@@ -1,1 +1,5 @@
-{}
+{
+  "/api/generate/route": "app/api/generate/route.js",
+  "/api/fallback/route": "app/api/fallback/route.js",
+  "/page": "app/page.js"
+}
