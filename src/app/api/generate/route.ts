@@ -5,7 +5,6 @@ import { NextResponse } from 'next/server';
 const client = new AzureOpenAI ({
   apiKey: process.env.AZURE_OPENAI_API_KEY || '',
   endpoint: process.env.AZURE_OPENAI_ENDPOINT || '',
-  deployment: process.env.AZURE_OPENAI_DEPLOYMENT_NAME || '',
   apiVersion: process.env.AZURE_OPENAI_VERSION || '2023-05-15' // Use environment variable or fallback
 });
 
@@ -76,7 +75,7 @@ export async function POST(req: Request) {
     }
 
     // Make sure to use the deployment name you set up in Azure
-    const deploymentName = process.env.AZURE_OPENAI_DEPLOYMENT_NAME || 'gpt-4';
+    const deploymentName = process.env.AZURE_OPENAI_DEPLOYMENT_NAME || 'gpt-4o-mini';
 
     const completion = await client.getChatCompletions(
       deploymentName,
