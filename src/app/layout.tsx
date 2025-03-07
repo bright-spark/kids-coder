@@ -1,6 +1,6 @@
-
 import '@/styles/globals.css'
 import type { Metadata } from 'next'
+import { Toaster } from '@/components/toaster' //Import Toaster component
 
 export const metadata: Metadata = {
   title: 'Kids Coder',
@@ -14,7 +14,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        {children}
+        <Toaster /> {/* Add Toaster component to the layout */}
+      </body>
     </html>
   )
 }

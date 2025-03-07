@@ -149,10 +149,13 @@ function toast({ ...props }: Toast) {
     });
   const dismiss = () => dispatch({ type: 'DISMISS_TOAST', toastId: id });
 
-  // Set up auto-dismiss
-  setTimeout(() => {
+  // Set up auto-dismiss with a stored timeout ID that can be cleared
+  const timeoutId = setTimeout(() => {
     dismiss();
   }, props.duration || TOAST_AUTO_DISMISS_DELAY);
+  
+  // Store the timeout ID for potential cleanup
+  toastTimeouts.set(id, timeoutId);
 
   dispatch({
     type: 'ADD_TOAST',
