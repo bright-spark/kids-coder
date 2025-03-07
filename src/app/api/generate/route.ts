@@ -88,6 +88,12 @@ export async function POST(req: Request) {
 
     console.log('Processing request with prompt:', prompt.substring(0, 50) + '...');
     console.log('Existing code provided:', existingCode ? 'Yes, length: ' + existingCode.length : 'No');
+    if (existingCode) {
+      console.log('Code context first 100 chars:', existingCode.substring(0, 100) + '...');
+      console.log('Code context language:', existingCode.includes('<html') ? 'HTML' : 
+                                           existingCode.includes('function') ? 'JavaScript' : 
+                                           'Other');
+    }
     
     // Initialize OpenAI client configured for Azure
     const client = new OpenAI({
@@ -106,14 +112,15 @@ export async function POST(req: Request) {
       { role: "system", content: SYSTEM_PROMPT },
     ];
 
-    if (existingCode) {
+    if (existingCode && existingCode.trim() !== '') {
+      // More explicit context setting
       messages.push({
         role: "assistant",
-        content: "Here's the current code we're working with:\n\n" + existingCode
+        content: "Here's the current code we're working with:\n\n```html\n" + existingCode + "\n```"
       });
       messages.push({
         role: "user",
-        content: `Based on this existing code, ${prompt}`
+        content: `Based on this existing code, ${prompt}. Modify the existing code with your changes - don't start from scratch.`
       });
     } else {
       messages.push({
