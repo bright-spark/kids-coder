@@ -1,21 +1,16 @@
 import { AzureOpenAI } from '@azure/openai';
 import { NextResponse } from 'next/server';
 
-// Azure OpenAI configuration validation
+// Azure OpenAI configuration
 const apiKey = process.env.AZURE_OPENAI_API_KEY;
 const endpoint = process.env.AZURE_OPENAI_ENDPOINT;
 const apiVersion = process.env.AZURE_OPENAI_VERSION || '2023-05-15';
+const deploymentName = process.env.AZURE_OPENAI_DEPLOYMENT_NAME || 'gpt-4o-mini';
 
+// Check if environment is properly configured
 if (!apiKey || !endpoint) {
-  console.error('Missing Azure OpenAI API configuration. Please set AZURE_OPENAI_API_KEY and AZURE_OPENAI_ENDPOINT environment variables.');
+  console.error('AZURE_OPENAI_API_KEY needs to be set for this app to work');
 }
-
-// Initialize Azure OpenAI client
-const client = new AzureOpenAI({
-  apiKey: apiKey || '',
-  endpoint: endpoint || '',
-  apiVersion: apiVersion
-});
 
 const HTML_TEMPLATE = `<!DOCTYPE html>
 <html lang="en">
@@ -61,9 +56,13 @@ ${HTML_TEMPLATE}
 
 export async function POST(req: Request) {
   try {
-    // Validate API configuration
-    if (!process.env.AZURE_OPENAI_API_KEY || !process.env.AZURE_OPENAI_ENDPOINT) {
-      throw new Error('Azure OpenAI API configuration is missing. Please check your environment variables.');
+    // Check if required environment variables are set
+    if (!apiKey || !endpoint) {
+      console.error('AZURE_OPENAI_API_KEY needs to be set for this app to work');
+      return NextResponse.json(
+        { error: 'API configuration is missing. Please set AZURE_OPENAI_API_KEY and AZURE_OPENAI_ENDPOINT environment variables.' },
+        { status: 500 }
+      );
     }
 
     const { prompt, existingCode } = await req.json();
@@ -75,6 +74,14 @@ export async function POST(req: Request) {
       );
     }
 
+    // Initialize Azure OpenAI client
+    const client = new AzureOpenAI({ 
+      apiKey, 
+      endpoint, 
+      apiVersion
+    });
+
+    // Prepare messages for the chat completion
     const messages = [
       { role: "system", content: SYSTEM_PROMPT },
     ];
@@ -95,81 +102,43 @@ export async function POST(req: Request) {
       });
     }
 
-    // Make sure to use the deployment name you set up in Azure
-    const deploymentName = process.env.AZURE_OPENAI_DEPLOYMENT_NAME || 'gpt-4o-mini';
-
     console.log(`Using deployment: ${deploymentName}`);
-    console.log('API endpoint:', endpoint);
-    console.log('API key configured:', apiKey ? 'Yes (key hidden)' : 'No');
-    
-    try {
-      console.log('Calling Azure OpenAI API with deployment:', deploymentName);
-      console.log('Number of messages being sent:', messages.length);
-      
-      // Validate Azure OpenAI client and configuration
-      if (!apiKey) {
-        console.error('AZURE_OPENAI_API_KEY is not set');
-        throw new Error('AZURE_OPENAI_API_KEY is not set');
-      }
-      
-      if (!endpoint) {
-        console.error('AZURE_OPENAI_ENDPOINT is not set');
-        throw new Error('AZURE_OPENAI_ENDPOINT is not set');
-      }
-      
-      console.log('Azure OpenAI configuration:', {
-        endpoint,
-        apiVersion,
-        deploymentName
-      });
-      
-      try {
-        const completion = await client.getChatCompletions(
-          deploymentName,
-          messages,
-          {
-            temperature: 0.7,
-            maxTokens: 2048,
-            n: 1
-          }
-        );
 
-    if (!completion || !completion.choices || completion.choices.length === 0) {
+    try {
+      // Call Azure OpenAI API
+      const completion = await client.getChatCompletions(
+        deploymentName,
+        messages,
+        {
+          temperature: 0.7,
+          maxTokens: 2048,
+          n: 1
+        }
+      );
+
+      if (!completion || !completion.choices || completion.choices.length === 0) {
         throw new Error('No completion generated from Azure OpenAI API');
       }
 
       const generatedCode = completion.choices[0].message?.content || '';
-        
-        if (!generatedCode) {
-          throw new Error('Empty response from Azure OpenAI API');
-        }
 
-        return NextResponse.json({ code: generatedCode });
-      } catch (apiError) {
-        console.error('Error calling Azure OpenAI API:', apiError);
-        // Get detailed error information
-        const errorDetails = apiError instanceof Error ? 
-          { message: apiError.message, stack: apiError.stack } : 
-          String(apiError);
-        
-        console.error('Azure OpenAI API error details:', JSON.stringify(errorDetails, null, 2));
-        
-        return NextResponse.json(
-          { error: 'Failed to call Azure OpenAI API: ' + (apiError instanceof Error ? apiError.message : String(apiError)) },
-          { status: 500 }
-        );
+      if (!generatedCode) {
+        throw new Error('Empty response from Azure OpenAI API');
       }
+
+      return NextResponse.json({ code: generatedCode });
     } catch (apiError) {
       console.error('Error calling Azure OpenAI API:', apiError);
+
       return NextResponse.json(
         { error: 'Failed to call Azure OpenAI API: ' + (apiError instanceof Error ? apiError.message : String(apiError)) },
         { status: 500 }
       );
     }
   } catch (error) {
-    console.error('Azure OpenAI API Error:', error instanceof Error ? error.message : String(error));
+    console.error('Error:', error);
     return NextResponse.json(
-      { error: 'Failed to generate code. ' + (error instanceof Error ? error.message : 'Unknown error') },
+      { error: 'Failed to generate code: ' + (error instanceof Error ? error.message : String(error)) },
       { status: 500 }
     );
   }
