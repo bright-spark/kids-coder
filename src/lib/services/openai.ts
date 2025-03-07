@@ -6,13 +6,14 @@ export async function generateCode(prompt: string, existingCode?: string): Promi
     
     console.log('Generating code with prompt:', prompt.substring(0, 50) + '...');
     
-    const response = await fetch('/api/generate', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ prompt, existingCode }),
-    });
+    try {
+      const response = await fetch('/api/generate', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ prompt, existingCode }),
+      });
 
     let data;
     try {
@@ -44,6 +45,22 @@ export async function generateCode(prompt: string, existingCode?: string): Promi
     }
 
     return data.code;
+    
+    } catch (primaryError) {
+      console.error('Primary API call failed, trying fallback:', primaryError);
+      
+      // Try fallback endpoint if primary fails
+      const fallbackResponse = await fetch('/api/fallback', {
+        method: 'GET',
+      });
+      
+      if (!fallbackResponse.ok) {
+        throw new Error('Both primary and fallback API calls failed');
+      }
+      
+      const fallbackData = await fallbackResponse.json();
+      return fallbackData.code;
+    }
   } catch (error) {
     console.error('API Error:', error);
     throw new Error(error instanceof Error ? error.message : 'Failed to generate code. Please try again.');

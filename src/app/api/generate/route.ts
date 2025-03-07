@@ -106,27 +106,59 @@ export async function POST(req: Request) {
       console.log('Calling Azure OpenAI API with deployment:', deploymentName);
       console.log('Number of messages being sent:', messages.length);
       
-      const completion = await client.getChatCompletions(
-        deploymentName,
-        messages,
-        {
-          temperature: 0.7,
-          maxTokens: 2048,
-          n: 1
-        }
-      );
+      // Validate Azure OpenAI client and configuration
+      if (!apiKey) {
+        console.error('AZURE_OPENAI_API_KEY is not set');
+        throw new Error('AZURE_OPENAI_API_KEY is not set');
+      }
+      
+      if (!endpoint) {
+        console.error('AZURE_OPENAI_ENDPOINT is not set');
+        throw new Error('AZURE_OPENAI_ENDPOINT is not set');
+      }
+      
+      console.log('Azure OpenAI configuration:', {
+        endpoint,
+        apiVersion,
+        deploymentName
+      });
+      
+      try {
+        const completion = await client.getChatCompletions(
+          deploymentName,
+          messages,
+          {
+            temperature: 0.7,
+            maxTokens: 2048,
+            n: 1
+          }
+        );
 
     if (!completion || !completion.choices || completion.choices.length === 0) {
         throw new Error('No completion generated from Azure OpenAI API');
       }
 
       const generatedCode = completion.choices[0].message?.content || '';
-      
-      if (!generatedCode) {
-        throw new Error('Empty response from Azure OpenAI API');
-      }
+        
+        if (!generatedCode) {
+          throw new Error('Empty response from Azure OpenAI API');
+        }
 
-      return NextResponse.json({ code: generatedCode });
+        return NextResponse.json({ code: generatedCode });
+      } catch (apiError) {
+        console.error('Error calling Azure OpenAI API:', apiError);
+        // Get detailed error information
+        const errorDetails = apiError instanceof Error ? 
+          { message: apiError.message, stack: apiError.stack } : 
+          String(apiError);
+        
+        console.error('Azure OpenAI API error details:', JSON.stringify(errorDetails, null, 2));
+        
+        return NextResponse.json(
+          { error: 'Failed to call Azure OpenAI API: ' + (apiError instanceof Error ? apiError.message : String(apiError)) },
+          { status: 500 }
+        );
+      }
     } catch (apiError) {
       console.error('Error calling Azure OpenAI API:', apiError);
       return NextResponse.json(
