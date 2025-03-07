@@ -1,5 +1,11 @@
 export async function generateCode(prompt: string, existingCode?: string): Promise<string> {
   try {
+    if (!prompt || prompt.trim() === '') {
+      throw new Error('Prompt cannot be empty');
+    }
+    
+    console.log('Generating code with prompt:', prompt.substring(0, 50) + '...');
+    
     const response = await fetch('/api/generate', {
       method: 'POST',
       headers: {
@@ -8,15 +14,22 @@ export async function generateCode(prompt: string, existingCode?: string): Promi
       body: JSON.stringify({ prompt, existingCode }),
     });
 
+    const data = await response.json();
+
     if (!response.ok) {
-      throw new Error('Failed to generate code');
+      const errorMessage = data.error || 'Failed to generate code';
+      console.error('API Error Response:', errorMessage);
+      throw new Error(errorMessage);
     }
 
-    const data = await response.json();
+    if (!data.code) {
+      throw new Error('No code was generated. Try a different prompt.');
+    }
+
     return data.code;
   } catch (error) {
     console.error('API Error:', error);
-    throw new Error('Failed to generate code. Please try again.');
+    throw new Error(error instanceof Error ? error.message : 'Failed to generate code. Please try again.');
   }
 }
 
