@@ -81,56 +81,101 @@ export async function generateCode(prompt: string, _existingCode?: string): Prom
   }
 }
 
-export async function improveCode(code: string): Promise<string> {
+/**
+ * Helper function to process code with OpenAI API
+ * @param code The code to process
+ * @param promptType The type of processing to perform
+ * @param operationName Name of the operation for logging
+ * @returns The processed code
+ */
+async function processCodeWithAI(
+  code: string, 
+  promptType: 'improve' | 'debug',
+  operationName: string
+): Promise<string> {
+  if (!code || code.trim() === '') {
+    throw new Error('No code provided to process');
+  }
+
+  const prompts = {
+    improve: 'Improve this code while maintaining its core functionality',
+    debug: 'Debug and optimize this code while maintaining its core functionality'
+  };
+
+  const prompt = prompts[promptType];
+  console.log(`${operationName} code with length:`, code.length);
+
   try {
-    console.log('Improving code with length:', code.length);
+    // First attempt with primary API
+    console.log(`Sending ${operationName.toLowerCase()} request to primary API`);
+    const response = await fetch('/api/generate', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        prompt,
+        _existingCode: code
+      }),
+    });
 
+    // Check if the response is OK before trying to parse it
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error(`Primary API error response (${response.status}):`, errorText);
+      throw new Error(`API request failed with status ${response.status}: ${errorText.substring(0, 100)}`);
+    }
+
+    const data = await response.json();
+
+    if (!data.code) {
+      throw new Error(`No code was returned from the API for ${operationName.toLowerCase()} operation`);
+    }
+
+    return data.code;
+  } catch (primaryError) {
+    console.error(`Primary API call failed for ${operationName.toLowerCase()}, trying fallback:`, primaryError);
+
+    // Try fallback endpoint if primary fails
     try {
-      const response = await fetch('/api/generate', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          prompt: 'Improve this code while maintaining its core functionality',
-          _existingCode: code
-        }),
-      });
-
-      // Check if the response is OK before trying to parse it
-      if (!response.ok) {
-        throw new Error(`API request failed with status ${response.status}`);
-      }
-
-      const data = await response.json();
-
-      if (!data.code) {
-        throw new Error('No code was returned from the API');
-      }
-
-      return data.code;
-    } catch (primaryError) {
-      console.error('Primary API call failed for code improvement, trying fallback:', primaryError);
-
-      // Try fallback endpoint if primary fails
+      console.log(`Sending ${operationName.toLowerCase()} request to fallback API`);
       const fallbackResponse = await fetch('/api/fallback', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          prompt: 'Improve this code while maintaining its core functionality',
+          prompt,
           _existingCode: code
         }),
       });
 
       if (!fallbackResponse.ok) {
-        throw new Error(`Fallback API failed with status ${fallbackResponse.status}`);
+        const errorText = await fallbackResponse.text();
+        console.error(`Fallback API error response (${fallbackResponse.status}):`, errorText);
+        throw new Error(`Fallback API failed with status ${fallbackResponse.status}: ${errorText.substring(0, 100)}`);
       }
 
       const fallbackData = await fallbackResponse.json();
+      
+      if (!fallbackData.code) {
+        throw new Error(`No code was returned from the fallback API for ${operationName.toLowerCase()} operation`);
+      }
+      
       return fallbackData.code;
+    } catch (fallbackError) {
+      console.error(`Fallback API call failed for ${operationName.toLowerCase()}:`, fallbackError);
+      throw new Error(
+        `Both primary and fallback APIs failed. Primary error: ${primaryError instanceof Error ? primaryError.message : 'Unknown error'}. ` +
+        `Fallback error: ${fallbackError instanceof Error ? fallbackError.message : 'Unknown error'}`
+      );
     }
+  }
+}
+
+export async function improveCode(code: string): Promise<string> {
+  try {
+    return await processCodeWithAI(code, 'improve', 'Improving');
   } catch (error) {
     console.error('Code improvement error:', error);
     throw new Error(error instanceof Error ? error.message : 'Failed to improve code. Please try again.');
@@ -139,54 +184,7 @@ export async function improveCode(code: string): Promise<string> {
 
 export async function debugCode(code: string): Promise<string> {
   try {
-    console.log('Debugging code with length:', code.length);
-
-    try {
-      const response = await fetch('/api/generate', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          prompt: 'Debug and optimize this code while maintaining its core functionality',
-          _existingCode: code
-        }),
-      });
-
-      // Check if the response is OK before trying to parse it
-      if (!response.ok) {
-        throw new Error(`API request failed with status ${response.status}`);
-      }
-
-      const data = await response.json();
-
-      if (!data.code) {
-        throw new Error('No code was returned from the API');
-      }
-
-      return data.code;
-    } catch (primaryError) {
-      console.error('Primary API call failed for code debugging, trying fallback:', primaryError);
-
-      // Try fallback endpoint if primary fails
-      const fallbackResponse = await fetch('/api/fallback', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          prompt: 'Debug and optimize this code while maintaining its core functionality',
-          _existingCode: code
-        }),
-      });
-
-      if (!fallbackResponse.ok) {
-        throw new Error(`Fallback API failed with status ${fallbackResponse.status}`);
-      }
-
-      const fallbackData = await fallbackResponse.json();
-      return fallbackData.code;
-    }
+    return await processCodeWithAI(code, 'debug', 'Debugging');
   } catch (error) {
     console.error('Code debugging error:', error);
     throw new Error(error instanceof Error ? error.message : 'Failed to debug code. Please try again.');
