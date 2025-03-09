@@ -198,11 +198,11 @@ export function CodeEditor() {
           </DialogDescription>
           <input type="text" value={fileName} onChange={(e) => setFileName(e.target.value)} className="mt-4 border rounded p-2 w-full bg-gray-800 text-white"/>
         </DialogContent>
-        <DialogFooter>
+        <DialogFooter className="flex justify-between gap-2">
           <Button variant="destructive" onClick={() => setIsDownloadDialogOpen(false)}>
             Cancel
           </Button>
-          <Button onClick={downloadCode}>
+          <Button onClick={downloadCode} variant="default" className="bg-red-500 hover:bg-red-600">
             Download
           </Button>
         </DialogFooter>
