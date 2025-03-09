@@ -39,6 +39,12 @@ export function ChatInterface() {
     try {
       const generatedCode = await generateCode(chat.currentMessage, code.current);
       setCode(generatedCode);
+      
+      // Save to localStorage after generating new code
+      if (generatedCode?.trim()) {
+        localStorage.setItem('kidscoder_editor_content', generatedCode);
+      }
+      
       setActiveTab('editor');
 
       setChatState({

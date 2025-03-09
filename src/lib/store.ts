@@ -54,7 +54,14 @@ export const useAppStore = create<AppState>((set) => ({
       localStorage.removeItem('kidscoder_editor_content');
     }
     
-    return set(() => ({
+    return set((state) => ({
+      // Reset code state as well
+      code: {
+        ...state.code,
+        current: '',
+        history: [''],
+        position: 0,
+      },
       chat: {
         messages: [],
         currentMessage: '',

@@ -51,6 +51,11 @@ export function LivePreview({ code }: LivePreviewProps) {
       }
 
       setError(null);
+      
+      // Save to localStorage after preview
+      if (code?.trim()) {
+        localStorage.setItem('kidscoder_editor_content', code);
+      }
     } catch (err) {
       setError({
         message: err instanceof Error ? err.message : 'Failed to render preview',

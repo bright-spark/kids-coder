@@ -31,6 +31,9 @@ export function CodeEditor() {
   useEffect(() => {
     if (code.current) {
       localStorage.setItem(LOCAL_STORAGE_KEY, code.current);
+    } else {
+      // Clear local storage if editor is empty
+      localStorage.removeItem(LOCAL_STORAGE_KEY);
     }
   }, [code.current]);
 

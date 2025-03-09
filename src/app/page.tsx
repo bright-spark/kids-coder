@@ -1,5 +1,6 @@
 'use client'
 
+import { useEffect } from 'react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { ChatInterface } from '@/components/chat/chat-interface'
 import { CodeEditor } from '@/components/editor/code-editor'
@@ -10,6 +11,18 @@ import { Toaster } from '@/components/ui/toaster'
 
 export default function Home() {
   const { activeTab, setActiveTab, code } = useAppStore()
+  
+  // Handle page unload - clear localStorage if editor is empty
+  useEffect(() => {
+    const handleBeforeUnload = () => {
+      if (!code.current || code.current.trim() === '') {
+        localStorage.removeItem('kidscoder_editor_content');
+      }
+    };
+    
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+  }, [code.current]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-black via-[#1a0000] to-[#2d0000]">
