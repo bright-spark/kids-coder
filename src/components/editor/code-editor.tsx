@@ -207,9 +207,7 @@ export function CodeEditor() {
           />
         </DialogContent>
         <DialogFooter className="flex justify-between gap-2">
-          <Button variant="destructive" onClick={() => setIsDownloadDialogOpen(false)}>
-            Cancel
-          </Button>
+          
           </DialogFooter>
       </Dialog>
     </Card>
