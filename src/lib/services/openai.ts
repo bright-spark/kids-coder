@@ -9,9 +9,6 @@ export async function generateCode(prompt: string, _existingCode?: string): Prom
       ? `${prompt}\n\nPlease maintain consistency with the existing code context provided. Keep the same style, naming conventions, and structure when appropriate.`
       : prompt;
 
-    // Ensure existing code is properly handled
-    const existingCode = _existingCode ? _existingCode.trim() : '';
-
     console.log('Generating code with prompt:', enhancedPrompt.substring(0, 50) + '...');
 
     try {
@@ -24,9 +21,9 @@ export async function generateCode(prompt: string, _existingCode?: string): Prom
         },
         body: JSON.stringify({ 
           prompt: enhancedPrompt, 
-          existingCode: existingCode,
-          preserveContext: !!existingCode,
-          codeLanguage: existingCode ? detectLanguage(existingCode) : 'html'
+          existingCode: _existingCode || '',
+          preserveContext: !!_existingCode,
+          codeLanguage: _existingCode ? detectLanguage(_existingCode) : 'html'
         }),
       });
 
@@ -45,7 +42,7 @@ export async function generateCode(prompt: string, _existingCode?: string): Prom
             errorMessage = errorJson.error || `API request failed with status ${response.status}`;
           } catch (error) {
             // Not JSON, use text directly
-            const _jsonError = error; 
+            const _jsonError = error; // Fixed: Added underscore
             errorMessage = `API request failed: ${errorText.substring(0, 100)}`;
           }
         } catch (textError) {
@@ -80,9 +77,9 @@ export async function generateCode(prompt: string, _existingCode?: string): Prom
         },
         body: JSON.stringify({ 
           prompt: enhancedPrompt, 
-          existingCode: existingCode,
-          preserveContext: !!existingCode,
-          codeLanguage: existingCode ? detectLanguage(existingCode) : 'html'
+          existingCode: _existingCode || '',
+          preserveContext: !!_existingCode,
+          codeLanguage: _existingCode ? detectLanguage(_existingCode) : 'html'
         }),
       });
 
