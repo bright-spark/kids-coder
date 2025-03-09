@@ -196,7 +196,18 @@ export function CodeEditor() {
           <DialogDescription className="text-gray-200">
             Enter a filename for your code (optional, defaults to 'code.html'):
           </DialogDescription>
-          <input type="text" value={fileName} onChange={(e) => setFileName(e.target.value)} className="mt-4 border rounded p-2 w-full bg-gray-800 text-white"/>
+          <input 
+            type="text" 
+            value={fileName} 
+            onChange={(e) => setFileName(e.target.value)} 
+            className="mt-4 border rounded p-2 w-full bg-gray-800 text-white"
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                downloadCode();
+              }
+            }}
+            placeholder="Enter filename or press Enter for default"
+          />
         </DialogContent>
         <DialogFooter className="flex justify-between gap-2">
           <Button variant="destructive" onClick={() => setIsDownloadDialogOpen(false)}>
