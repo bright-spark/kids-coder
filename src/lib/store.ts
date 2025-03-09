@@ -48,8 +48,13 @@ export const useAppStore = create<AppState>((set) => ({
     set((state) => ({
       chat: { ...state.chat, ...chatState },
     })),
-  clearChat: () =>
-    set(() => ({
+  clearChat: () => {
+    // Clear the localStorage when clearing chat
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('kidscoder_editor_content');
+    }
+    
+    return set(() => ({
       chat: {
         messages: [],
         currentMessage: '',
@@ -62,7 +67,8 @@ export const useAppStore = create<AppState>((set) => ({
         history: [''],
         position: 0,
       },
-    })),
+    }));
+  },
   undo: () =>
     set((state) => {
       const newPosition = Math.max(0, state.code.position - 1);

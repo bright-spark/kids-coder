@@ -4,10 +4,12 @@ import { Button } from '@/components/ui/button';
 import { Wand2, Bug, Undo, Redo, Loader2 } from 'lucide-react';
 import { useAppStore } from '@/lib/store';
 import { useToast } from '@/components/ui/use-toast';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { improveCode, debugCode } from '@/lib/services/openai';
 import { extractCodeAndExplanation } from '@/lib/utils/message-formatter';
 import { Dialog, DialogFooter, DialogTitle, DialogContent, DialogDescription } from '@/components/ui/dialog';
+
+const LOCAL_STORAGE_KEY = 'kidscoder_editor_content';
 
 export function CodeEditor() {
   const { code, setCode, undo, redo, isProcessing, setProcessing } = useAppStore();
@@ -16,6 +18,21 @@ export function CodeEditor() {
   const [isDebugging, setIsDebugging] = useState(false);
   const [isDownloadDialogOpen, setIsDownloadDialogOpen] = useState(false);
   const [fileName, setFileName] = useState('');
+  
+  // Load from localStorage on component mount
+  useEffect(() => {
+    const savedCode = localStorage.getItem(LOCAL_STORAGE_KEY);
+    if (savedCode && !code.current) {
+      setCode(savedCode);
+    }
+  }, []);
+  
+  // Save to localStorage whenever code changes
+  useEffect(() => {
+    if (code.current) {
+      localStorage.setItem(LOCAL_STORAGE_KEY, code.current);
+    }
+  }, [code.current]);
 
   const handleImprove = async () => {
     setIsImproving(true);
