@@ -122,7 +122,7 @@ export function ChatInterface() {
             variant="outline"
             className="flex-1 bg-red-950/20 text-red-400 border-red-900/40 hover:bg-red-950/40"
             onClick={clearChat}
-            disabled={!chat.messages.length || chat.isLoading}
+            disabled={((!chat.messages.length && !code.current) || chat.isLoading)}
           >
             <Trash2 className="h-4 w-4 mr-2" />
             Clear Chat
