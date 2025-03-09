@@ -7,7 +7,8 @@ import { useToast } from '@/components/ui/use-toast';
 import { useState } from 'react';
 import { improveCode, debugCode } from '@/lib/services/openai';
 import { extractCodeAndExplanation } from '@/lib/utils/message-formatter';
-import { Dialog, DialogHeader, DialogBody, DialogFooter, DialogTitle, DialogContent, DialogDescription, Button as DialogButton } from '@/components/ui/dialog';
+import { Dialog, DialogFooter, DialogTitle, DialogContent, DialogDescription } from '@/components/ui/dialog';
+import { Button as DialogButton } from '@/components/ui/button';
 
 
 export function CodeEditor() {
