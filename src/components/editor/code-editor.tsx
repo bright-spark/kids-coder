@@ -7,12 +7,16 @@ import { useToast } from '@/components/ui/use-toast';
 import { useState } from 'react';
 import { improveCode, debugCode } from '@/lib/services/openai';
 import { extractCodeAndExplanation } from '@/lib/utils/message-formatter';
+import { Dialog, DialogHeader, DialogBody, DialogFooter, DialogTitle, DialogContent, DialogDescription, Button as DialogButton } from '@/components/ui/dialog';
+
 
 export function CodeEditor() {
   const { code, setCode, undo, redo, isProcessing, setProcessing } = useAppStore();
   const { toast } = useToast();
   const [isImproving, setIsImproving] = useState(false);
   const [isDebugging, setIsDebugging] = useState(false);
+  const [isDownloadDialogOpen, setIsDownloadDialogOpen] = useState(false);
+  const [fileName, setFileName] = useState('');
 
   const handleImprove = async () => {
     setIsImproving(true);
@@ -42,10 +46,11 @@ export function CodeEditor() {
     setProcessing(true);
     try {
       const debuggedCode = await debugCode(code.current);
-      setCode(debuggedCode);
+      const { code: formattedCode } = extractCodeAndExplanation(debuggedCode);
+      setCode(formattedCode || debuggedCode);
       toast({
-        title: "Debug Complete",
-        description: "Your code has been debugged and optimized",
+        title: "Code Debugged",
+        description: "Your code has been optimized and issues have been fixed",
       });
     } catch (error) {
       toast({
@@ -57,6 +62,36 @@ export function CodeEditor() {
       setIsDebugging(false);
       setProcessing(false);
     }
+  };
+
+  const handleDownload = () => {
+    if (!code.current) return;
+    setIsDownloadDialogOpen(true);
+  };
+
+  const downloadCode = () => {
+    if (!code.current) return;
+
+    // Create a blob with the code content
+    const blob = new Blob([code.current], { type: 'text/html' });
+    const url = URL.createObjectURL(blob);
+
+    // Create a temporary link and trigger the download
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = fileName || 'code.html';
+    document.body.appendChild(a);
+    a.click();
+
+    // Clean up
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    setIsDownloadDialogOpen(false);
+
+    toast({
+      title: "Download Complete",
+      description: `Your code has been downloaded as ${fileName || 'code.html'}`,
+    });
   };
 
   return (
@@ -74,10 +109,10 @@ export function CodeEditor() {
         </div>
       )}
       <div className="p-2 border-b border-red-900/20 w-full">
-        <div className="flex flex-wrap gap-2 justify-between w-full"> {/* Modified line */}
-          <Button 
-            variant="ghost" 
-            size="sm" 
+        <div className="flex flex-wrap gap-2 justify-between w-full">
+          <Button
+            variant="ghost"
+            size="sm"
             onClick={undo}
             disabled={isProcessing || !code.current}
             className="text-red-400 hover:text-red-300"
@@ -85,9 +120,9 @@ export function CodeEditor() {
             <Undo className="h-4 w-4 mr-1" />
             <span className="hidden sm:inline">Undo</span>
           </Button>
-          <Button 
-            variant="ghost" 
-            size="sm" 
+          <Button
+            variant="ghost"
+            size="sm"
             onClick={redo}
             disabled={isProcessing || !code.current}
             className="text-red-400 hover:text-red-300"
@@ -116,6 +151,15 @@ export function CodeEditor() {
             <Bug className={`h-4 w-4 mr-1 ${isDebugging ? 'animate-spin' : ''}`} />
             <span className="hidden sm:inline">{isDebugging ? 'Debugging...' : 'Debug'}</span>
           </Button>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="text-red-400 hover:text-red-300"
+            onClick={handleDownload}
+            disabled={isProcessing || !code.current}
+          >
+            Download
+          </Button>
         </div>
       </div>
       <div className="h-[500px] sm:h-[600px]">
@@ -135,6 +179,25 @@ export function CodeEditor() {
           }}
         />
       </div>
+      <Dialog open={isDownloadDialogOpen} onClose={() => setIsDownloadDialogOpen(false)}>
+        <DialogContent>
+          <DialogTitle>
+            Download Code
+          </DialogTitle>
+          <DialogDescription>
+            Enter a filename for your code (optional, defaults to 'code.html'):
+          </DialogDescription>
+          <input type="text" value={fileName} onChange={(e) => setFileName(e.target.value)} className="mt-4 border rounded p-2 w-full"/>
+        </DialogContent>
+        <DialogFooter>
+          <DialogButton variant="destructive" onClick={() => setIsDownloadDialogOpen(false)}>
+            Cancel
+          </DialogButton>
+          <DialogButton onClick={downloadCode}>
+            Download
+          </DialogButton>
+        </DialogFooter>
+      </Dialog>
     </Card>
   );
 }
