@@ -54,10 +54,9 @@ export const useAppStore = create<AppState>((set) => ({
       localStorage.removeItem('kidscoder_editor_content');
     }
     
-    return set((state) => ({
-      // Reset code state as well
+    return set(() => ({
+      // Reset code state
       code: {
-        ...state.code,
         current: '',
         history: [''],
         position: 0,
@@ -68,11 +67,6 @@ export const useAppStore = create<AppState>((set) => ({
         isLoading: false,
         processingMessageId: null,
         categories: CODE_CATEGORIES,
-      },
-      code: {
-        current: '',
-        history: [''],
-        position: 0,
       },
     }));
   },
