@@ -210,10 +210,7 @@ export function CodeEditor() {
           <Button variant="destructive" onClick={() => setIsDownloadDialogOpen(false)}>
             Cancel
           </Button>
-          <Button onClick={downloadCode} variant="default" className="bg-red-500 hover:bg-red-600">
-            Download
-          </Button>
-        </DialogFooter>
+          </DialogFooter>
       </Dialog>
     </Card>
   );
