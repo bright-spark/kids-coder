@@ -78,7 +78,12 @@ export function CodeEditor() {
     // Create a temporary link and trigger the download
     const a = document.createElement('a');
     a.href = url;
-    a.download = fileName || 'code.html';
+    // Ensure filename has an extension if not provided
+    let downloadName = fileName || 'code';
+    if (!downloadName.toLowerCase().endsWith('.html') && !downloadName.toLowerCase().endsWith('.htm')) {
+      downloadName += '.html';
+    }
+    a.download = downloadName;
     document.body.appendChild(a);
     a.click();
 
