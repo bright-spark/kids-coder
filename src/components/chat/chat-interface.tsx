@@ -1,5 +1,5 @@
-import React from 'react';
-import { Send, Sparkles, Trash2, ChevronRight } from 'lucide-react';
+import React, { useRef } from 'react';
+import { Send, Sparkles, Trash2, ChevronRight, Upload } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -16,6 +16,7 @@ import { cn } from '@/lib/utils';
 export function ChatInterface() {
   const { chat, setChatState, setCode, setActiveTab, clearChat, code } = useAppStore();
   const { toast } = useToast();
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -62,6 +63,18 @@ export function ChatInterface() {
     setChatState({ currentMessage: promptText });
   };
 
+  const handleFileLoad = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setCode(e.target?.result as string);
+        setActiveTab('editor');
+      };
+      reader.readAsText(file);
+    }
+  };
+
   return (
     <Card className="w-full max-w-3xl mx-auto neuro-card border-red-900/20">
       <div className="p-4 space-y-4">
@@ -104,6 +117,33 @@ export function ChatInterface() {
           </Button>
         </form>
 
+        <div className="flex space-x-2 mb-6">
+          <Button
+            variant="outline"
+            className="flex-1 bg-red-950/20 text-red-400 border-red-900/40 hover:bg-red-950/40"
+            onClick={clearChat}
+            disabled={!chat.messages.length || chat.isLoading}
+          >
+            <Trash2 className="h-4 w-4 mr-2" />
+            Clear Chat
+          </Button>
+          <Button
+            variant="outline"
+            className="flex-1 bg-red-950/20 text-red-400 border-red-900/40 hover:bg-red-950/40"
+            onClick={() => fileInputRef.current?.click()}
+          >
+            <Upload className="h-4 w-4 mr-2" />
+            Load HTML
+          </Button>
+          <input
+            type="file"
+            ref={fileInputRef}
+            accept=".html,.htm"
+            style={{ display: 'none' }}
+            onChange={handleFileLoad}
+          />
+        </div>
+
         {chat.messages.length === 0 ? (
           <div className="space-y-4">
             <div className="text-center">
@@ -122,8 +162,8 @@ export function ChatInterface() {
           </div>
         ) : (
           <div className="min-h-[400px] space-y-4 overflow-y-auto">
-            <MessageList 
-              messages={chat.messages.filter(m => m.role === 'user')} 
+            <MessageList
+              messages={chat.messages.filter(m => m.role === 'user')}
               processingMessageId={chat.processingMessageId}
             />
           </div>
