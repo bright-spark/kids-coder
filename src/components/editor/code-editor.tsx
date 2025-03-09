@@ -8,7 +8,7 @@ import { useState } from 'react';
 import { improveCode, debugCode } from '@/lib/services/openai';
 import { extractCodeAndExplanation } from '@/lib/utils/message-formatter';
 import { Dialog, DialogFooter, DialogTitle, DialogContent, DialogDescription } from '@/components/ui/dialog';
-import { Button as DialogButton } from '@/components/ui/button';
+import { Button } from '@/components/ui/button';
 
 
 export function CodeEditor() {
@@ -135,6 +135,16 @@ export function CodeEditor() {
           <Button
             variant="ghost"
             size="sm"
+            onClick={() => setIsDownloadDialogOpen(true)}
+            disabled={isProcessing || !code.current}
+            className="text-red-400 hover:text-red-300"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4 mr-1"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+            <span className="hidden sm:inline">Download</span>
+          </Button>
+          <Button
+            variant="ghost"
+            size="sm"
             className="text-red-400 hover:text-red-300"
             onClick={handleImprove}
             disabled={isImproving || isProcessing || !code.current}
@@ -185,18 +195,18 @@ export function CodeEditor() {
           <DialogTitle>
             Download Code
           </DialogTitle>
-          <DialogDescription>
+          <DialogDescription className="text-gray-200">
             Enter a filename for your code (optional, defaults to 'code.html'):
           </DialogDescription>
-          <input type="text" value={fileName} onChange={(e) => setFileName(e.target.value)} className="mt-4 border rounded p-2 w-full"/>
+          <input type="text" value={fileName} onChange={(e) => setFileName(e.target.value)} className="mt-4 border rounded p-2 w-full bg-gray-800 text-white"/>
         </DialogContent>
         <DialogFooter>
-          <DialogButton variant="destructive" onClick={() => setIsDownloadDialogOpen(false)}>
+          <Button variant="destructive" onClick={() => setIsDownloadDialogOpen(false)}>
             Cancel
-          </DialogButton>
-          <DialogButton onClick={downloadCode}>
+          </Button>
+          <Button onClick={downloadCode}>
             Download
-          </DialogButton>
+          </Button>
         </DialogFooter>
       </Dialog>
     </Card>
