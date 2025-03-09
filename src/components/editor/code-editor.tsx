@@ -8,8 +8,6 @@ import { useState } from 'react';
 import { improveCode, debugCode } from '@/lib/services/openai';
 import { extractCodeAndExplanation } from '@/lib/utils/message-formatter';
 import { Dialog, DialogFooter, DialogTitle, DialogContent, DialogDescription } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-
 
 export function CodeEditor() {
   const { code, setCode, undo, redo, isProcessing, setProcessing } = useAppStore();
