@@ -180,7 +180,7 @@ export function CodeEditor() {
           }}
         />
       </div>
-      <Dialog open={isDownloadDialogOpen} onClose={() => setIsDownloadDialogOpen(false)}>
+      <Dialog open={isDownloadDialogOpen} onOpenChange={(open) => setIsDownloadDialogOpen(open)}>
         <DialogContent>
           <DialogTitle>
             Download Code
