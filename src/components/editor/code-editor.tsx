@@ -160,15 +160,7 @@ export function CodeEditor() {
             <Bug className={`h-4 w-4 mr-1 ${isDebugging ? 'animate-spin' : ''}`} />
             <span className="hidden sm:inline">{isDebugging ? 'Debugging...' : 'Debug'}</span>
           </Button>
-          <Button
-            variant="ghost"
-            size="sm"
-            className="text-red-400 hover:text-red-300"
-            onClick={handleDownload}
-            disabled={isProcessing || !code.current}
-          >
-            Download
-          </Button>
+          
         </div>
       </div>
       <div className="h-[500px] sm:h-[600px]">
