@@ -23,12 +23,13 @@ export function LoginForm() {
       const result = await signInWithEmailAndPassword(auth, email, password);
       if (result.user) {
         const token = await result.user.getIdToken();
-        document.cookie = `authToken=${token};path=/;max-age=3600`;
+        document.cookie = `authToken=${token};path=/;max-age=3600;SameSite=Strict`;
         toast({
           title: "Success",
           description: "Successfully logged in!",
         });
-        router.push('/');
+        router.refresh();
+        router.replace('/');
       }
     } catch (error: any) {
       toast({
