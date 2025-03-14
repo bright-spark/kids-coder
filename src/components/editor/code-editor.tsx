@@ -84,11 +84,6 @@ export function CodeEditor() {
     }
   };
 
-  const handleDownload = () => {
-    if (!code.current) return;
-    setIsDownloadDialogOpen(true);
-  };
-
   const downloadCode = () => {
     if (!code.current) return;
 
@@ -165,6 +160,7 @@ export function CodeEditor() {
             <Redo className="h-4 w-4 mr-1" />
             <span className="hidden sm:inline">Redo</span>
           </Button>
+          <div className="flex-1" />
           <Button
             variant="ghost"
             size="sm"
@@ -182,7 +178,7 @@ export function CodeEditor() {
             style={{ display: 'none' }}
             onChange={handleFileLoad}
           />
-          <div className="flex-1" />
+          
           <Button
             variant="ghost"
             size="sm"
