@@ -24,6 +24,9 @@ export const AuthProvider = ({ children }: any) => {
     try {
       const result = await signInWithEmailAndPassword(auth, email, password);
       if (result.user) {
+        // Set cookie for auth state
+        document.cookie = `authToken=${await result.user.getIdToken()};path=/`;
+        router.refresh();
         router.push('/');
         return { success: true };
       }

@@ -21,12 +21,16 @@ export function LoginForm() {
     e.preventDefault();
     setIsLoading(true);
     try {
-      await signInWithEmailAndPassword(auth, email, password);
-      toast({
-        title: "Success",
-        description: "Successfully logged in!",
-      });
-      router.push('/');
+      const result = await signInWithEmailAndPassword(auth, email, password);
+      if (result.user) {
+        document.cookie = `authToken=${await result.user.getIdToken()};path=/`;
+        toast({
+          title: "Success",
+          description: "Successfully logged in!",
+        });
+        router.refresh();
+        router.push('/');
+      }
     } catch (error) {
       toast({
         title: "Error",
