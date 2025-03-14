@@ -2,7 +2,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { signOut, FirebaseError } from 'firebase/auth';
+import { signOut } from 'firebase/auth';
+import { FirebaseError } from 'firebase/app';
 import { auth } from '@/lib/firebase';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/lib/auth-context';

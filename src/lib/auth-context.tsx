@@ -1,7 +1,8 @@
 'use client';
 
 import { createContext, useContext, useEffect, useState } from 'react';
-import { User, FirebaseError } from 'firebase/auth';
+import { User } from 'firebase/auth';
+import { FirebaseError } from 'firebase/app';
 import { auth, createUserWithEmailAndPassword } from './firebase';
 
 // Map Firebase error codes to user-friendly messages
@@ -9,11 +10,11 @@ const getErrorMessage = (error: FirebaseError) => {
   const errorMessages: Record<string, string> = {
     'auth/invalid-email': 'The email address is not valid.',
     'auth/user-disabled': 'This user account has been disabled.',
-    'auth/user-not-found': 'No account found with this email.',
+    'auth/user-not-found': 'Login failed: User not found. Please check your email or sign up for an account.',
     'auth/wrong-password': 'Incorrect password.',
     'auth/email-already-in-use': 'An account already exists with this email.',
     'auth/weak-password': 'The password is too weak.',
-    'auth/invalid-credential': 'Invalid login credentials.',
+    'auth/invalid-credential': 'Login failed: User not found or incorrect password.',
     'auth/invalid-api-key': 'Firebase API key is missing or invalid. Please contact support.',
     'auth/operation-not-allowed': 'This operation is not allowed.',
     'auth/network-request-failed': 'Network error. Please check your connection.',
