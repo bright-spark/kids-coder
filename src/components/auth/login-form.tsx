@@ -1,14 +1,32 @@
-
 'use client';
 
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { auth } from '@/lib/firebase';
-import { signInWithEmailAndPassword } from 'firebase/auth';
+// import { signInWithEmailAndPassword } from 'firebase/auth'; // Removed as login function handles auth
 import { useToast } from '@/components/ui/use-toast';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card';
 import { useRouter } from 'next/navigation';
+
+// Placeholder for the login function - needs to be implemented separately.
+const login = async (email: string, password: string) => {
+  try {
+    // Your actual login logic here using Firebase or another auth provider.
+    // Example using Firebase (replace with your actual implementation):
+    const result = await signInWithEmailAndPassword(auth, email, password);
+    if (result.user) {
+      // Assuming login handles token generation and storage.  Adapt as needed for your actual implementation.
+      return { success: true, error: null };
+    } else {
+      return { success: false, error: new Error("Login failed") };
+    }
+  } catch (error) {
+    return { success: false, error: error };
+  }
+};
+
+
 
 export function LoginForm() {
   const [email, setEmail] = useState('');
@@ -21,20 +39,20 @@ export function LoginForm() {
     e.preventDefault();
     setIsLoading(true);
     try {
-      const result = await signInWithEmailAndPassword(auth, email, password);
-      if (result.user) {
-        const token = await result.user.getIdToken();
-        document.cookie = `authToken=${token};path=/`;
+      const { success, error } = await login(email, password);
+      if (success) {
         toast({
           title: "Success",
           description: "Successfully logged in!",
         });
         router.replace('/');
+      } else {
+        throw error;
       }
     } catch (error) {
       toast({
         title: "Error",
-        description: "Login failed: Invalid email or password",
+        description: "Login failed: " + (error.message || "An unknown error occurred."),
         variant: "destructive",
       });
     } finally {

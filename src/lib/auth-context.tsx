@@ -25,8 +25,9 @@ export const AuthProvider = ({ children }: any) => {
       const result = await signInWithEmailAndPassword(auth, email, password);
       if (result.user) {
         const token = await result.user.getIdToken();
-        document.cookie = `authToken=${token};path=/`;
-        router.replace('/');
+        document.cookie = `authToken=${token};path=/;max-age=3600`;
+        setUser(result.user);
+        await router.push('/');
         return { success: true };
       }
       return { success: false, error: new Error('No user found') };
