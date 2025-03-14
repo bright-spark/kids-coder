@@ -2,36 +2,18 @@
 'use client';
 
 import { useState } from 'react';
-import { signInWithPopup, signOut, GoogleAuthProvider } from 'firebase/auth';
+import { signOut } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/lib/auth-context';
 import { useToast } from '@/components/ui/use-toast';
+import { AuthDialog } from './auth-dialog';
 
 export function AuthButtons() {
   const [isLoading, setIsLoading] = useState(false);
+  const [showAuthDialog, setShowAuthDialog] = useState(false);
   const { user } = useAuth();
   const { toast } = useToast();
-
-  const handleSignIn = async () => {
-    try {
-      setIsLoading(true);
-      const provider = new GoogleAuthProvider();
-      await signInWithPopup(auth, provider);
-      toast({
-        title: "Successfully signed in",
-        description: "Welcome back!",
-      });
-    } catch (error) {
-      toast({
-        title: "Error signing in",
-        description: "Please try again later",
-        variant: "destructive",
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   const handleSignOut = async () => {
     try {
@@ -63,13 +45,19 @@ export function AuthButtons() {
           Sign Out
         </Button>
       ) : (
-        <Button
-          variant="default"
-          onClick={handleSignIn}
-          disabled={isLoading}
-        >
-          Sign in with Google
-        </Button>
+        <>
+          <Button
+            variant="default"
+            onClick={() => setShowAuthDialog(true)}
+            disabled={isLoading}
+          >
+            Sign In
+          </Button>
+          <AuthDialog 
+            isOpen={showAuthDialog} 
+            onClose={() => setShowAuthDialog(false)} 
+          />
+        </>
       )}
     </div>
   );
