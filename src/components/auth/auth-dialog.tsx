@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -74,6 +74,7 @@ export function AuthDialog({ isOpen, onClose }: { isOpen: boolean; onClose: () =
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold text-center">Welcome to Kids Coder</DialogTitle>
+          <DialogDescription>Sign in to your account to continue</DialogDescription>
         </DialogHeader>
         <Tabs defaultValue="signin" className="w-full">
           <TabsList className="grid w-full grid-cols-2 mb-8">
