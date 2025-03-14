@@ -1,7 +1,7 @@
 import '@/styles/globals.css'
 import type { Metadata } from 'next'
 import { Toaster } from '@/components/toaster' //Import Toaster component
-import { AuthProvider } from './components/authProvider'; //Import AuthProvider
+import { AuthProvider } from '@/app/components/authProvider'; //Import AuthProvider
 
 export const metadata: Metadata = {
   title: 'Kids Coder',
