@@ -1,50 +1,76 @@
-'use client';
+'use client'
 
-import { useEffect, useState } from 'react';
-import { useAuth } from '@/lib/auth-context';
-import { AuthDialog } from '@/components/auth/auth-dialog';
-import { CodeEditor } from '@/components/editor/code-editor';
-
+import { useEffect } from 'react'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { ChatInterface } from '@/components/chat/chat-interface'
+import { CodeEditor } from '@/components/editor/code-editor'
+import { LivePreview } from '@/components/preview/live-preview'
+import { MessageCircle, Code2, Play } from 'lucide-react'
+import { useAppStore } from '@/lib/store'
+import { Toaster } from '@/components/ui/toaster'
 
 export default function Home() {
-  const { user } = useAuth();
-  const [showAuth, setShowAuth] = useState(false);
-
-  useEffect(() => {
-    if (!user) {
-      setShowAuth(true);
-    }
-  }, [user]);
-
+  const { activeTab, setActiveTab, code } = useAppStore()
+  
   // Handle page unload - clear localStorage if editor is empty
   useEffect(() => {
     const handleBeforeUnload = () => {
-      //  This part remains from the original code.  Assuming code.current is available even with the new structure.  If not, adjustments will be needed.
       if (!code.current || code.current.trim() === '') {
         localStorage.removeItem('kidscoder_editor_content');
       }
     };
-
+    
     window.addEventListener('beforeunload', handleBeforeUnload);
     return () => window.removeEventListener('beforeunload', handleBeforeUnload);
-  }, []); //Removed code dependency to avoid unnecessary re-renders.
-
-
-  if (!user) {
-    return (
-      <main className="flex min-h-screen flex-col items-center justify-center p-24">
-        <h1 className="text-4xl font-bold mb-8">Welcome to Kids Coder</h1>
-        <p className="text-lg mb-8">Please sign in to continue</p>
-        <AuthDialog isOpen={showAuth} onClose={() => setShowAuth(false)} />
-      </main>
-    );
-  }
+  }, [code.current]);
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm">
-        <CodeEditor />
+    <div className="min-h-screen bg-gradient-to-br from-black via-[#1a0000] to-[#2d0000]">
+      <div className="container mx-auto px-4 py-4 sm:py-8 max-w-[1400px]">
+        <header className="text-center mb-6 sm:mb-8">
+          <h1 className="text-3xl sm:text-4xl font-bold text-red-500 mb-2">Kids Coder</h1>
+          <p className="text-red-300/80">AI-Powered Code Generator for Young Learners</p>
+        </header>
+
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
+          <TabsList className="grid w-full grid-cols-3 bg-black/40 backdrop-blur-lg neuro-shadow rounded-xl p-1">
+            <TabsTrigger 
+              value="chat" 
+              className="data-[state=active]:bg-red-600 data-[state=active]:text-white rounded-lg"
+            >
+              <MessageCircle className="h-4 w-4 mr-2" />
+              <span className="hidden sm:inline">Chat</span>
+            </TabsTrigger>
+            <TabsTrigger 
+              value="editor" 
+              className="data-[state=active]:bg-red-600 data-[state=active]:text-white rounded-lg"
+            >
+              <Code2 className="h-4 w-4 mr-2" />
+              <span className="hidden sm:inline">Editor</span>
+            </TabsTrigger>
+            <TabsTrigger 
+              value="preview" 
+              className="data-[state=active]:bg-red-600 data-[state=active]:text-white rounded-lg"
+            >
+              <Play className="h-4 w-4 mr-2" />
+              <span className="hidden sm:inline">Preview</span>
+            </TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="chat" className="mt-4">
+            <ChatInterface />
+          </TabsContent>
+
+          <TabsContent value="editor" className="mt-4">
+            <CodeEditor />
+          </TabsContent>
+
+          <TabsContent value="preview" className="mt-4">
+            <LivePreview code={code.current} />
+          </TabsContent>
+        </Tabs>
       </div>
-    </main>
-  );
+      <Toaster />
+    </div>
+  )
 }
