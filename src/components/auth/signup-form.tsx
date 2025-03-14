@@ -34,9 +34,17 @@ export function SignupForm() {
         description: "Account created successfully!",
       });
     } catch (error) {
+      const firebaseError = error as FirebaseError;
+      const errorMessages: Record<string, string> = {
+        'auth/email-already-in-use': 'An account with this email already exists',
+        'auth/invalid-email': 'Invalid email address',
+        'auth/weak-password': 'Password is too weak - must be at least 6 characters',
+        'auth/network-request-failed': 'Network error - please check your connection',
+      };
+      
       toast({
         title: "Error",
-        description: "Failed to create account",
+        description: errorMessages[firebaseError.code] || 'Failed to create account',
         variant: "destructive",
       });
     } finally {
