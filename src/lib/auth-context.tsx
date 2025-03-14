@@ -24,10 +24,9 @@ export const AuthProvider = ({ children }: any) => {
     try {
       const result = await signInWithEmailAndPassword(auth, email, password);
       if (result.user) {
-        // Set cookie for auth state
-        document.cookie = `authToken=${await result.user.getIdToken()};path=/`;
-        router.refresh();
-        router.push('/');
+        const token = await result.user.getIdToken();
+        document.cookie = `authToken=${token};path=/`;
+        router.replace('/');
         return { success: true };
       }
       return { success: false, error: new Error('No user found') };
