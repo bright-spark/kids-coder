@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState } from 'react';
@@ -7,7 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/components/ui/use-toast';
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail } from 'firebase/auth';
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail,sendEmailVerification } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
 
 export function AuthDialog({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
@@ -15,7 +14,7 @@ export function AuthDialog({ isOpen, onClose }: { isOpen: boolean; onClose: () =
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
-  
+
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
@@ -38,9 +37,10 @@ export function AuthDialog({ isOpen, onClose }: { isOpen: boolean; onClose: () =
     e.preventDefault();
     setIsLoading(true);
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      await sendEmailVerification(userCredential.user); // Send verification email
       onClose();
-      toast({ title: 'Account created successfully!' });
+      toast({ title: 'Success', description: 'Account created! Please check your email to verify your account.' });
     } catch (error) {
       toast({ 
         title: 'Sign up failed', 
