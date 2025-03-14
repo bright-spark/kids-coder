@@ -22,9 +22,12 @@ export const AuthProvider = ({ children }: any) => {
 
   const handleLogin = async (email: string, password: string) => {
     try {
-      await signInWithEmailAndPassword(auth, email, password);
-      router.push('/');
-      return { success: true };
+      const result = await signInWithEmailAndPassword(auth, email, password);
+      if (result.user) {
+        router.push('/');
+        return { success: true };
+      }
+      return { success: false, error: new Error('No user found') };
     } catch (error) {
       handleError(error as FirebaseError);
       return { success: false, error };
