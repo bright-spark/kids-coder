@@ -7,11 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/components/ui/use-toast';
-import { 
-  createUserWithEmailAndPassword, 
-  signInWithEmailAndPassword,
-  sendPasswordResetEmail
-} from 'firebase/auth';
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
 
 export function AuthDialog({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
@@ -19,17 +15,17 @@ export function AuthDialog({ isOpen, onClose }: { isOpen: boolean; onClose: () =
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
-
+  
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     try {
       await signInWithEmailAndPassword(auth, email, password);
       onClose();
-      toast({ title: 'Signed in successfully' });
+      toast({ title: 'Welcome back!' });
     } catch (error) {
       toast({ 
-        title: 'Error signing in', 
+        title: 'Sign in failed', 
         description: error instanceof Error ? error.message : 'Please try again',
         variant: 'destructive'
       });
@@ -44,10 +40,10 @@ export function AuthDialog({ isOpen, onClose }: { isOpen: boolean; onClose: () =
     try {
       await createUserWithEmailAndPassword(auth, email, password);
       onClose();
-      toast({ title: 'Account created successfully' });
+      toast({ title: 'Account created successfully!' });
     } catch (error) {
       toast({ 
-        title: 'Error creating account', 
+        title: 'Sign up failed', 
         description: error instanceof Error ? error.message : 'Please try again',
         variant: 'destructive'
       });
@@ -61,10 +57,10 @@ export function AuthDialog({ isOpen, onClose }: { isOpen: boolean; onClose: () =
     setIsLoading(true);
     try {
       await sendPasswordResetEmail(auth, email);
-      toast({ title: 'Reset email sent', description: 'Check your inbox' });
+      toast({ title: 'Reset email sent', description: 'Check your inbox for instructions' });
     } catch (error) {
       toast({ 
-        title: 'Error sending reset email', 
+        title: 'Reset failed', 
         description: error instanceof Error ? error.message : 'Please try again',
         variant: 'destructive'
       });
@@ -75,70 +71,109 @@ export function AuthDialog({ isOpen, onClose }: { isOpen: boolean; onClose: () =
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent>
+      <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Authentication</DialogTitle>
+          <DialogTitle className="text-2xl font-bold text-center">Welcome to Kids Coder</DialogTitle>
         </DialogHeader>
-        <Tabs defaultValue="signin">
-          <TabsList className="grid w-full grid-cols-3">
+        <Tabs defaultValue="signin" className="w-full">
+          <TabsList className="grid w-full grid-cols-2 mb-8">
             <TabsTrigger value="signin">Sign In</TabsTrigger>
             <TabsTrigger value="signup">Sign Up</TabsTrigger>
-            <TabsTrigger value="reset">Reset</TabsTrigger>
           </TabsList>
           <TabsContent value="signin">
             <form onSubmit={handleSignIn} className="space-y-4">
-              <Input
-                type="email"
-                placeholder="Email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-              />
-              <Input
-                type="password"
-                placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
-              <Button type="submit" className="w-full" disabled={isLoading}>
-                Sign In
+              <div className="space-y-2">
+                <Input
+                  type="email"
+                  placeholder="Email"
+                  className="w-full px-3 py-2"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                />
+                <Input
+                  type="password"
+                  placeholder="Password"
+                  className="w-full px-3 py-2"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                />
+              </div>
+              <Button type="submit" className="w-full bg-red-500 hover:bg-red-600" disabled={isLoading}>
+                {isLoading ? 'Signing in...' : 'Sign In'}
               </Button>
+              <div className="text-center">
+                <Button
+                  variant="link"
+                  type="button"
+                  onClick={() => {
+                    const tabsList = document.querySelector('[role="tablist"]') as HTMLElement;
+                    const resetTab = tabsList?.querySelector('[value="reset"]') as HTMLElement;
+                    resetTab?.click();
+                  }}
+                  className="text-sm text-gray-500 hover:text-gray-700"
+                >
+                  Forgot password?
+                </Button>
+              </div>
             </form>
           </TabsContent>
           <TabsContent value="signup">
             <form onSubmit={handleSignUp} className="space-y-4">
-              <Input
-                type="email"
-                placeholder="Email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-              />
-              <Input
-                type="password"
-                placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
-              <Button type="submit" className="w-full" disabled={isLoading}>
-                Sign Up
+              <div className="space-y-2">
+                <Input
+                  type="email"
+                  placeholder="Email"
+                  className="w-full px-3 py-2"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                />
+                <Input
+                  type="password"
+                  placeholder="Password"
+                  className="w-full px-3 py-2"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                />
+              </div>
+              <Button type="submit" className="w-full bg-red-500 hover:bg-red-600" disabled={isLoading}>
+                {isLoading ? 'Creating account...' : 'Create Account'}
               </Button>
             </form>
           </TabsContent>
           <TabsContent value="reset">
             <form onSubmit={handleReset} className="space-y-4">
-              <Input
-                type="email"
-                placeholder="Email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-              />
-              <Button type="submit" className="w-full" disabled={isLoading}>
-                Send Reset Email
+              <div className="space-y-2">
+                <p className="text-sm text-gray-500">Enter your email to receive password reset instructions.</p>
+                <Input
+                  type="email"
+                  placeholder="Email"
+                  className="w-full px-3 py-2"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                />
+              </div>
+              <Button type="submit" className="w-full bg-red-500 hover:bg-red-600" disabled={isLoading}>
+                {isLoading ? 'Sending...' : 'Send Reset Link'}
               </Button>
+              <div className="text-center">
+                <Button
+                  variant="link"
+                  type="button"
+                  onClick={() => {
+                    const tabsList = document.querySelector('[role="tablist"]') as HTMLElement;
+                    const signinTab = tabsList?.querySelector('[value="signin"]') as HTMLElement;
+                    signinTab?.click();
+                  }}
+                  className="text-sm text-gray-500 hover:text-gray-700"
+                >
+                  Back to Sign In
+                </Button>
+              </div>
             </form>
           </TabsContent>
         </Tabs>
