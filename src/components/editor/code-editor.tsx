@@ -166,13 +166,14 @@ export function CodeEditor() {
             <span className="hidden sm:inline">Redo</span>
           </Button>
           <Button
-            variant="outline"
+            variant="ghost"
+            size="sm"
             onClick={() => fileInputRef.current?.click()}
-            disabled={isProcessing}
+            disabled={isProcessing || !code.current}
             className="text-red-400 hover:text-red-300"
           >
-            <Upload className="h-4 w-4 mr-2" />
-            Load HTML
+            <Upload className="h-4 w-4 mr-1" />
+            <span className="hidden sm:inline">Load HTML</span>
           </Button>
           <input
             type="file"
