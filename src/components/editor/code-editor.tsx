@@ -118,7 +118,9 @@ export function CodeEditor() {
     const file = e.target.files?.[0];
     const reader = new FileReader();
     reader.onload = (e: ProgressEvent<FileReader>) => {
-      setCode(e.target.result);
+      if (e.target?.result) {
+        setCode(e.target.result as string);
+      }
     };
     reader.readAsText(file);
   };
