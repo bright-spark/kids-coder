@@ -1,12 +1,9 @@
 {
-<<<<<<< HEAD
-  "/api/connection-test/route": "app/api/connection-test/route.js",
   "/_not-found/page": "app/_not-found/page.js",
+  "/api/status/route": "app/api/status/route.js",
+  "/api/test/route": "app/api/test/route.js",
   "/api/fallback/route": "app/api/fallback/route.js",
   "/api/generate/route": "app/api/generate/route.js",
-  "/api/test/route": "app/api/test/route.js",
-  "/api/status/route": "app/api/status/route.js",
-=======
->>>>>>> 00482d1195524e7814e33983ec02012f847a2fc5
+  "/api/connection-test/route": "app/api/connection-test/route.js",
   "/page": "app/page.js"
 }
