@@ -7,6 +7,7 @@
       "static/chunks/main-app-5cd78171d7680558.js",
       "static/chunks/app/_not-found/page-19c549b2a6751267.js"
     ],
+<<<<<<< HEAD
     "/api/connection-test/route": [
       "static/chunks/webpack-51108842ca545fbf.js",
       "static/chunks/778022d2-81e9bc916a49c338.js",
@@ -60,6 +61,12 @@
       "static/chunks/476-754b839f63f06474.js",
       "static/chunks/52-481c9a640a1f5c97.js",
       "static/chunks/app/page-d5b6acaaa352b796.js"
+=======
+    "/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/page.js"
+>>>>>>> 00482d1195524e7814e33983ec02012f847a2fc5
     ]
   }
 }

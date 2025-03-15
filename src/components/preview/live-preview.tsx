@@ -1,72 +1,55 @@
+
 import { Card } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { AlertTriangle, Loader2 } from 'lucide-react';
 import { useState, useEffect, useRef } from 'react';
-import { CodeError } from '@/lib/types';
 import { useAppStore } from '@/lib/store';
 
-interface LivePreviewProps {
-  code: string;
+interface PreviewError {
+  message: string;
+  type: string;
 }
 
-export function LivePreview({ code }: LivePreviewProps) {
-  const [error, setError] = useState<CodeError | null>(null);
-  const { isProcessing } = useAppStore();
+export function LivePreview() {
+  const { code, isProcessing } = useAppStore();
   const iframeRef = useRef<HTMLIFrameElement>(null);
+  const [error, setError] = useState<PreviewError | null>(null);
+  const updateTimeoutRef = useRef<NodeJS.Timeout>();
 
   useEffect(() => {
-    if (!code?.trim()) return;
+    if (!code?.current) return;
 
-    try {
-      if (iframeRef.current) {
+    const updatePreview = () => {
+      try {
         const iframe = iframeRef.current;
-        const iframeDoc = iframe.contentDocument || iframe.contentWindow?.document;
+        if (!iframe) return;
 
-        if (iframeDoc) {
-          iframeDoc.open();
-          
-          // If code contains HTML structure, use it directly
-          if (code.includes('<!DOCTYPE') || code.includes('<html') || code.includes('<body')) {
-            iframeDoc.write(code);
-          } else {
-            // For JavaScript or HTML fragments, wrap in proper HTML structure
-            const wrappedCode = `
-              <!DOCTYPE html>
-              <html>
-                <head>
-                  <meta charset="UTF-8">
-                  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                </head>
-                <body>
-                  ${code.includes('<') ? code : ''}
-                  ${!code.includes('<') ? `<script>${code}</script>` : ''}
-                </body>
-              </html>
-            `;
-            iframeDoc.write(wrappedCode);
-          }
-          
-          iframeDoc.close();
-        }
-      }
+        const doc = iframe.contentDocument || iframe.contentWindow?.document;
+        if (!doc) return;
 
-      setError(null);
-      
-      // Save to localStorage after preview
-      if (code?.trim()) {
-        localStorage.setItem('kidscoder_editor_content', code);
+        doc.open();
+        doc.write(code.current);
+        doc.close();
+        setError(null);
+      } catch (err) {
+        setError({
+          message: 'Failed to update preview',
+          type: 'error'
+        });
       }
-    } catch (err) {
-      setError({
-        message: err instanceof Error ? err.message : 'Failed to render preview',
-        type: 'error'
-      });
-    }
-  }, [code]);
+    };
+
+    clearTimeout(updateTimeoutRef.current);
+    updateTimeoutRef.current = setTimeout(updatePreview, 300);
+
+    return () => {
+      clearTimeout(updateTimeoutRef.current);
+    };
+  }, [code?.current]);
 
   return (
     <Card className="w-full space-y-4 neuro-card border-red-900/20 relative">
-      {(isProcessing || !code) && (
+      {(isProcessing || !code?.current) && (
         <div className="absolute inset-0 bg-black/50 backdrop-blur-sm z-10 flex items-center justify-center rounded-lg">
           {isProcessing ? (
             <div className="text-center space-y-2">
@@ -90,7 +73,7 @@ export function LivePreview({ code }: LivePreviewProps) {
           title="preview"
           className="w-full h-full rounded-lg bg-white"
           sandbox="allow-scripts allow-forms allow-same-origin allow-modals allow-popups allow-presentation"
-          onError={(_e) => {
+          onError={() => {
             setError({
               message: 'Failed to render preview',
               type: 'error'

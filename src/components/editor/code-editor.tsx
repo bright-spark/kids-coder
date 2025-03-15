@@ -1,10 +1,10 @@
 import Editor from '@monaco-editor/react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Wand2, Bug, Undo, Redo, Loader2 } from 'lucide-react';
+import { Wand2, Bug, Undo, Redo, Loader2, Upload } from 'lucide-react';
 import { useAppStore } from '@/lib/store';
 import { useToast } from '@/components/ui/use-toast';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { improveCode, debugCode } from '@/lib/services/openai';
 import { extractCodeAndExplanation } from '@/lib/utils/message-formatter';
 import { Dialog, DialogFooter, DialogTitle, DialogContent, DialogDescription } from '@/components/ui/dialog';
@@ -18,7 +18,8 @@ export function CodeEditor() {
   const [isDebugging, setIsDebugging] = useState(false);
   const [isDownloadDialogOpen, setIsDownloadDialogOpen] = useState(false);
   const [fileName, setFileName] = useState('');
-  
+  const fileInputRef = useRef(null);
+
   // Load from localStorage on component mount
   useEffect(() => {
     const savedCode = localStorage.getItem(LOCAL_STORAGE_KEY);
@@ -26,7 +27,7 @@ export function CodeEditor() {
       setCode(savedCode);
     }
   }, []);
-  
+
   // Save to localStorage whenever code changes
   useEffect(() => {
     if (code.current) {
@@ -83,11 +84,6 @@ export function CodeEditor() {
     }
   };
 
-  const handleDownload = () => {
-    if (!code.current) return;
-    setIsDownloadDialogOpen(true);
-  };
-
   const downloadCode = () => {
     if (!code.current) return;
 
@@ -117,6 +113,16 @@ export function CodeEditor() {
       description: `Your code has been downloaded as ${fileName || 'code.html'}`,
     });
   };
+
+  const handleFileLoad = (e) => {
+    const file = e.target.files[0];
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      setCode(e.target.result);
+    };
+    reader.readAsText(file);
+  };
+
 
   return (
     <Card className="w-full neuro-card border-red-900/20 relative">
@@ -155,6 +161,24 @@ export function CodeEditor() {
             <span className="hidden sm:inline">Redo</span>
           </Button>
           <div className="flex-1" />
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => fileInputRef.current?.click()}
+            disabled={isProcessing || !code.current}
+            className="text-red-400 hover:text-red-300"
+          >
+            <Upload className="h-4 w-4 mr-1" />
+            <span className="hidden sm:inline">Load HTML</span>
+          </Button>
+          <input
+            type="file"
+            ref={fileInputRef}
+            accept=".html,.htm"
+            style={{ display: 'none' }}
+            onChange={handleFileLoad}
+          />
+          
           <Button
             variant="ghost"
             size="sm"
@@ -227,7 +251,7 @@ export function CodeEditor() {
           />
         </DialogContent>
         <DialogFooter className="flex justify-between gap-2">
-          
+
           </DialogFooter>
       </Dialog>
     </Card>

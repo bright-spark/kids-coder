@@ -133,21 +133,6 @@ export function ChatInterface() {
             <Trash2 className="h-4 w-4 mr-2" />
             Clear Chat
           </Button>
-          <Button
-            variant="outline"
-            className="flex-1 bg-red-950/20 text-red-400 border-red-900/40 hover:bg-red-950/40"
-            onClick={() => fileInputRef.current?.click()}
-          >
-            <Upload className="h-4 w-4 mr-2" />
-            Load HTML
-          </Button>
-          <input
-            type="file"
-            ref={fileInputRef}
-            accept=".html,.htm"
-            style={{ display: 'none' }}
-            onChange={handleFileLoad}
-          />
         </div>
 
         {chat.messages.length === 0 ? (
