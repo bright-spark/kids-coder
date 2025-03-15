@@ -53,7 +53,7 @@ export function LivePreview({ code: initialCode }: LivePreviewProps) {
 
   return (
     <Card className="w-full space-y-4 neuro-card border-red-900/20 relative">
-      {(isProcessing || !code?.current) && (
+      {(isProcessing || !initialCode) && (
         <div className="absolute inset-0 bg-black/50 backdrop-blur-sm z-10 flex items-center justify-center rounded-lg">
           {isProcessing ? (
             <div className="text-center space-y-2">
