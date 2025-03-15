@@ -49,7 +49,7 @@ export function LivePreview({ code: initialCode }: LivePreviewProps) {
     return () => {
       clearTimeout(updateTimeoutRef.current);
     };
-  }, [code?.current]);
+  }, [initialCode]);
 
   return (
     <Card className="w-full space-y-4 neuro-card border-red-900/20 relative">
