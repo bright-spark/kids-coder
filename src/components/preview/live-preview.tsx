@@ -10,14 +10,18 @@ interface PreviewError {
   type: string;
 }
 
-export function LivePreview() {
-  const { code, isProcessing } = useAppStore();
+interface LivePreviewProps {
+  code: string;
+}
+
+export function LivePreview({ code: initialCode }: LivePreviewProps) {
+  const { isProcessing } = useAppStore();
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const [error, setError] = useState<PreviewError | null>(null);
   const updateTimeoutRef = useRef<NodeJS.Timeout>();
 
   useEffect(() => {
-    if (!code?.current) return;
+    if (!initialCode) return;
 
     const updatePreview = () => {
       try {
@@ -28,7 +32,7 @@ export function LivePreview() {
         if (!doc) return;
 
         doc.open();
-        doc.write(code.current);
+        doc.write(initialCode);
         doc.close();
         setError(null);
       } catch (err) {
