@@ -18,7 +18,7 @@ export function CodeEditor() {
   const [isDebugging, setIsDebugging] = useState(false);
   const [isDownloadDialogOpen, setIsDownloadDialogOpen] = useState(false);
   const [fileName, setFileName] = useState('');
-  const fileInputRef = useRef(null);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   // Load from localStorage on component mount
   useEffect(() => {
@@ -182,7 +182,7 @@ export function CodeEditor() {
             style={{ display: 'none' }}
             onChange={handleFileLoad}
           />
-          
+
           <Button
             variant="ghost"
             size="sm"
