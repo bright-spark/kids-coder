@@ -114,10 +114,10 @@ export function CodeEditor() {
     });
   };
 
-  const handleFileLoad = (e) => {
-    const file = e.target.files[0];
+  const handleFileLoad = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
     const reader = new FileReader();
-    reader.onload = (e) => {
+    reader.onload = (e: ProgressEvent<FileReader>) => {
       setCode(e.target.result);
     };
     reader.readAsText(file);
