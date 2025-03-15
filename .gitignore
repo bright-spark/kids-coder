@@ -10,10 +10,10 @@
 
 # next.js
 /.next/
-/out/
-/build
 .next/
-next-dist/
+.next/*
+/.next
+/.next/*
 
 # production
 /dist
