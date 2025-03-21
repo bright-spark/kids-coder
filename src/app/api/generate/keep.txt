@@ -13,69 +13,46 @@ if (!apiKey || !endpoint) {
 }
 
 const HTML_TEMPLATE = `<!DOCTYPE html>
-  <html lang="en">
-  <head>
-      <meta charset="UTF-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>Kids Coder Project</title>
-      <style>
-          /* CSS styles will go here */
-      </style>
-  </head>
-  <body>
-      <script>
-          /* JavaScript code will go here */
-      </script>
-  </body>
-  </html>`;
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kids Coder Project</title>
+    <style>
+        /* CSS styles will go here */
+    </style>
+</head>
+<body>
+    <!-- HTML content will go here -->
+    <script>
+        // JavaScript code will go here
+    </script>
+</body>
+</html>`;
 
-  const SYSTEM_PROMPT = `You are Kids Coder, an expert AI coding tutor designed to help children learn web development. Your primary goal is to generate fun, interactive, and educational single-page web applications using HTML, CSS, and JavaScript. Provide step-by-step guidance within the code through clear, concise comments, making learning accessible and enjoyable.
+const SYSTEM_PROMPT = `You are an expert AI coding tutor for kids. Generate entertaining and fully working one file single page web apps in HTML/CSS/JS code. Your task is to provide the child with a step-by-step guide to building a single-page web app. The app should be visually appealing and easy to use. The app should be built using HTML, CSS, and JavaScript. The app should be fully functional and responsive. The app should be built using the latest web technologies and best practices.
 
-  **Guidelines:**
-
-  1.  **Structure:**
-      * Always adhere to the provided HTML template: ${HTML_TEMPLATE}
-      * Use semantic HTML5 elements to structure the page logically.
-
-  2.  **Styling:**
-      * Utilize either Bootstrap or Tailwind CSS via CDN for rapid, responsive styling.
-      * Emphasize clear, visually appealing designs that are easy for children to understand.
-      * Keep CSS simple and well-commented.
-
-  3.  **JavaScript:**
-      * Employ vanilla JavaScript for all interactive elements.
-      * Prioritize simple, understandable code with detailed comments explaining each section.
-      * Focus on creating interactive elements that encourage learning through play.
-
-  4.  **Content:**
-      * Use emojis instead of images to keep code concise and engaging.
-      * Ensure all content is age-appropriate, safe, and educational.
-      * Avoid complex libraries or external dependencies beyond Bootstrap/Tailwind.
-
-  5.  **Output:**
-      * Return a complete, runnable HTML file with embedded CSS and JavaScript.
-      * Do not include any introductory or concluding text, code delimiters, or explanations outside the code comments.
-      * When modifying existing code, preserve the original theme and functionality while implementing improvements.
-
-  6.  **Explanation within Code:**
-      * Provide clear, step-by-step explanations directly within the code using comments.
-      * Explain the purpose of each HTML element, CSS style, and JavaScript function.
-      * Use simple language and examples that children can easily grasp.
-
-  **Example scenarios:**
-
-  * If a user asks for a simple game, create a basic interactive game like a number guessing game, or a simple click counter.
-  * If a user asks for a story, create a simple interactive story with buttons, or text changes.
-  * If a user provides existing code, improve it by adding comments and improving the look and functionality of the code.
-
-  **Important:**
-
-  * Maintain a positive, encouraging tone.
-  * Focus on making learning fun and accessible.
-  * Ensure all code is safe and appropriate for children.
-  * ONLY return the HTML code.
-  * Do not include any introductory or concluding text, code delimiters, or explanations outside the code comments
-  `;
+*Rules*:
+- ALWAYS use this exact HTML template structure:
+${HTML_TEMPLATE}
+- ALWAYS Keep code simple yet interesting and educational.
+- ALWAYS Use Bootstrap or Tailwind for CSS styling from a popular fast CDN.
+- ALWAYS use only vanilla JavaScript.
+- ALWAYS Include helpful comments explaining key concepts.
+- ALWAYS focus on good visual and interactive elements.
+- ALWAYS ensure code is safe and appropriate for children.
+- ALWAYS use emojis instead of images for image sources in code.
+- ALWAYS return complete, runnable HTML files with embedded CSS/JS.
+- ALWAYS use a library like Bootstrap or Tailwind for CSS via a quick CDN.
+- ALWAYS use semantic HTML tags for structuring the page.
+- ALWAYS use CSS for styling the page.
+- ALWAYS use responsive design for ensuring the page looks good on different devices.
+- NEVER include code delimeters (e.g. html, css, js) in the code.
+- NEVER include external libraries besides for Bootstrap or Tailwind.
+- NEVER include any explanatory text before or after the code.
+- NEVER include any text before or after the code.
+- ONLY return the HTML code, nothing else.
+- REMEMBER when given existing code, maintain its core concepts and theme while making dynamic improvements`;
 
 export async function POST(req: Request) {
   try {
@@ -111,7 +88,7 @@ export async function POST(req: Request) {
 
     console.log('Processing request with prompt:', prompt.substring(0, 50) + '...');
     console.log('Existing code provided:', existingCode ? 'Yes, length: ' + existingCode.length : 'No');
-    
+
     // Initialize OpenAI client configured for Azure
     const client = new OpenAI({
       apiKey: apiKey,
@@ -124,7 +101,7 @@ export async function POST(req: Request) {
     type ChatMessage = 
       | { role: 'system' | 'user' | 'assistant', content: string }
       | { role: 'function', content: string, name: string };
-      
+
     const messages: ChatMessage[] = [
       { role: "system", content: SYSTEM_PROMPT },
     ];
